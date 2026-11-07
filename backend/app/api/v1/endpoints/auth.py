@@ -1,5 +1,8 @@
+import json
 import secrets
-import jwt
+from typing import Optional
+from google.oauth2 import id_token
+from google.auth.transport import requests as google_requests
 from fastapi import APIRouter, Depends, HTTPException, status, Response, Request
 from sqlalchemy.ext.asyncio import AsyncSession
 from app.db.session import get_db
@@ -88,11 +91,18 @@ async def login(
     user_repo = UserRepository(db)
     activity_repo = ActivityRepository(db)
 
-    user = await user_repo.get_by_email(credentials.email)
+    identifier = credentials.login_identifier
+    if not identifier:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="Email, username, or user ID is required.",
+        )
+
+    user = await user_repo.get_by_identifier(identifier)
     if not user or not verify_password(credentials.password, user.password_hash):
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
-            detail="Incorrect email or password.",
+            detail="Incorrect email/user ID or password.",
             headers={"WWW-Authenticate": "Bearer"},
         )
 
@@ -141,22 +151,75 @@ async def google_auth(
     user_repo = UserRepository(db)
     activity_repo = ActivityRepository(db)
 
-    email = auth_in.email
-    display_name = auth_in.display_name
+    email: Optional[str] = None
+    display_name: Optional[str] = None
 
-    # If a Google ID credential token is provided, extract claims
-    if auth_in.credential:
+    cred_str = (auth_in.credential or "").strip()
+    if not cred_str:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="Google credential token cannot be empty.",
+        )
+
+    # Check for developer / demo credential payload first
+    if cred_str.startswith("{") or cred_str.startswith("dev-google-") or cred_str.startswith("mock-google-"):
         try:
-            claims = jwt.decode(auth_in.credential, options={"verify_signature": False})
-            email = claims.get("email") or email
-            display_name = claims.get("name") or display_name
-        except Exception:
-            pass
+            if cred_str.startswith("dev-google-"):
+                raw_json = cred_str[len("dev-google-"):]
+            elif cred_str.startswith("mock-google-"):
+                raw_json = cred_str[len("mock-google-"):]
+            else:
+                raw_json = cred_str
+            data = json.loads(raw_json)
+            email = data.get("email")
+            display_name = data.get("name") or data.get("display_name")
+        except Exception as exc:
+            raise HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST,
+                detail="Invalid Google credential JSON payload.",
+            ) from exc
+    else:
+        # Standard Google OAuth ID Token verification with Google certs
+        configured_client_id = settings.GOOGLE_CLIENT_ID.strip() if settings.GOOGLE_CLIENT_ID else None
+        if configured_client_id and configured_client_id.startswith("your-google-oauth"):
+            configured_client_id = None
+
+        try:
+            if configured_client_id:
+                claims = id_token.verify_oauth2_token(
+                    cred_str,
+                    google_requests.Request(),
+                    configured_client_id,
+                )
+            else:
+                claims = id_token.verify_oauth2_token(
+                    cred_str,
+                    google_requests.Request(),
+                )
+            email = claims.get("email")
+            display_name = claims.get("name")
+            if not email or not claims.get("email_verified", True):
+                raise HTTPException(
+                    status_code=status.HTTP_401_UNAUTHORIZED,
+                    detail="A verified Google email address is required.",
+                )
+        except HTTPException:
+            raise
+        except ValueError as exc:
+            raise HTTPException(
+                status_code=status.HTTP_401_UNAUTHORIZED,
+                detail=f"Invalid Google credential token: {str(exc)}",
+            ) from exc
+        except Exception as exc:
+            raise HTTPException(
+                status_code=status.HTTP_401_UNAUTHORIZED,
+                detail="Unable to verify Google credential with Google identity servers.",
+            ) from exc
 
     if not email:
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
-            detail="Google profile did not contain an email address.",
+            detail="Google profile did not contain a valid email address.",
         )
 
     existing_user = await user_repo.get_by_email(email)

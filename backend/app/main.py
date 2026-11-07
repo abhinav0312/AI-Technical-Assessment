@@ -7,6 +7,7 @@ from app.core.config import settings
 from app.core.logging import setup_logging, logger
 from app.api.v1.api import api_router
 from app.db.init_db import init_db
+from app.services.evaluator import start_evaluator_worker, stop_evaluator_worker
 
 setup_logging()
 
@@ -16,9 +17,11 @@ async def lifespan(app: FastAPI):
     logger.info(f"Starting {settings.PROJECT_NAME} v{settings.VERSION} [{settings.ENVIRONMENT}]")
     try:
         await init_db()
+        start_evaluator_worker()
     except Exception as e:
         logger.error(f"Error during database initialization: {e}")
     yield
+    stop_evaluator_worker()
     logger.info(f"Shutting down {settings.PROJECT_NAME}")
 
 

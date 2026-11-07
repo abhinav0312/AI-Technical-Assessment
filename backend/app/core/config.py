@@ -1,6 +1,7 @@
+import json
 from typing import List, Union
 from pydantic_settings import BaseSettings, SettingsConfigDict
-from pydantic import AnyHttpUrl, field_validator
+from pydantic import field_validator
 
 
 class Settings(BaseSettings):
@@ -9,6 +10,7 @@ class Settings(BaseSettings):
     API_V1_STR: str = "/api/v1"
     ENVIRONMENT: str = "development"
     LOG_LEVEL: str = "INFO"
+    GOOGLE_CLIENT_ID: str = ""
 
     # Security
     SECRET_KEY: str = "devmind-ai-super-secret-key-change-in-production-random-256bit-min"
@@ -24,20 +26,30 @@ class Settings(BaseSettings):
         "http://127.0.0.1:3000",
         "http://localhost:5173",
         "http://127.0.0.1:5173",
+        "http://localhost:3001",
+        "http://127.0.0.1:3001",
     ]
 
     @field_validator("BACKEND_CORS_ORIGINS", mode="before")
     @classmethod
     def assemble_cors_origins(cls, v: Union[str, List[str]]) -> List[str]:
-        if isinstance(v, str) and not v.startswith("["):
-            return [i.strip() for i in v.split(",") if i.strip()]
-        elif isinstance(v, list):
+        if isinstance(v, str):
+            try:
+                parsed = json.loads(v)
+                if isinstance(parsed, list):
+                    return [str(origin).strip().rstrip("/") for origin in parsed if str(origin).strip()]
+            except json.JSONDecodeError:
+                pass
+            return [i.strip().rstrip("/") for i in v.split(",") if i.strip()]
+        if isinstance(v, list):
             return v
         return [
             "http://localhost:3000",
             "http://127.0.0.1:3000",
             "http://localhost:5173",
             "http://127.0.0.1:5173",
+            "http://localhost:3001",
+            "http://127.0.0.1:3001",
         ]
 
     # Cookie settings

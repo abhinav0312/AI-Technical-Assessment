@@ -11,6 +11,14 @@ export interface StarterCodeMap {
   [language: string]: string;
 }
 
+export interface SampleTestCase {
+  id: string;
+  description?: string | null;
+  stdin: string;
+  expected_output: string;
+  order_index?: number;
+}
+
 export interface Challenge {
   id: string;
   title: string;
@@ -19,12 +27,23 @@ export interface Challenge {
   difficulty: ChallengeDifficulty;
   category: string;
   constraints?: string | null;
-  starterCode?: StarterCodeMap | null;
-  supportedLanguages: string[];
+  starter_code?: StarterCodeMap | null;
+  supported_languages?: string[];
   visibility: ChallengeVisibility;
   tags: ChallengeTag[];
-  createdAt: string;
-  updatedAt: string;
+  created_at: string;
+  updated_at: string;
+
+  // Arena additions
+  acceptance_rate?: number | null;
+  total_submissions?: number | null;
+  user_status?: 'completed' | 'attempted' | 'unsolved' | null;
+  is_bookmarked?: boolean;
+  sample_test_cases?: SampleTestCase[];
+  user_draft?: string | null;
+  prev_challenge_slug?: string | null;
+  next_challenge_slug?: string | null;
+  required_reasoning_fields?: string[];
 }
 
 export interface ChallengeFilterParams {
@@ -32,27 +51,16 @@ export interface ChallengeFilterParams {
   difficulty?: string;
   category?: string;
   tag?: string;
+  language?: string;
+  sort_by?: string;
   page?: number;
-  pageSize?: number;
-}
-
-export interface ChallengeCreateInput {
-  title: string;
-  slug?: string;
-  description: string;
-  difficulty: ChallengeDifficulty;
-  category: string;
-  constraints?: string;
-  starterCode?: Record<string, string>;
-  supportedLanguages: string[];
-  visibility?: ChallengeVisibility;
-  tagNames?: string[];
+  page_size?: number;
 }
 
 export interface PaginatedResponse<T> {
   items: T[];
   total: number;
   page: number;
-  pageSize: number;
-  totalPages: number;
+  page_size: number;
+  total_pages: number;
 }

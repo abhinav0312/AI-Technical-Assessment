@@ -20,7 +20,7 @@ export function getAuthToken(): string | null {
   return inMemoryToken;
 }
 
-const API_BASE = import.meta.env.VITE_API_BASE_URL || '/api/v1';
+const API_BASE = import.meta.env.VITE_API_BASE_URL || import.meta.env.VITE_API_URL || '/api/v1';
 
 export async function apiClient<T>(
   endpoint: string,

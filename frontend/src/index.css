@@ -4,6 +4,38 @@
 
 @layer base {
   :root {
+    --background: 240 20% 99%; /* #fbfbfd warm modern off-white */
+    --foreground: 224 40% 12%; /* #0f172a deep charcoal */
+
+    --card: 0 0% 100%; /* #ffffff */
+    --card-foreground: 224 40% 12%;
+
+    --popover: 0 0% 100%;
+    --popover-foreground: 224 40% 12%;
+
+    --primary: 243 75% 59%; /* #4f46e5 friendly modern indigo */
+    --primary-foreground: 0 0% 100%;
+
+    --secondary: 220 14% 96%; /* #f1f5f9 */
+    --secondary-foreground: 224 40% 12%;
+
+    --muted: 220 14% 96%;
+    --muted-foreground: 215 16% 47%; /* #64748b */
+
+    --accent: 243 100% 97%; /* #eef2ff soft lavender-indigo */
+    --accent-foreground: 243 75% 50%;
+
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 0 0% 100%;
+
+    --border: 220 13% 91%; /* #e2e8f0 */
+    --input: 220 13% 91%;
+    --ring: 243 75% 59%;
+
+    --radius: 0.625rem;
+  }
+
+  .dark {
     --background: 222 47% 6%;
     --foreground: 210 40% 98%;
 
@@ -13,56 +45,24 @@
     --popover: 222 47% 9%;
     --popover-foreground: 210 40% 98%;
 
-    --primary: 239 84% 67%;
-    --primary-foreground: 210 40% 98%;
+    --primary: 221 83% 53%;
+    --primary-foreground: 0 0% 100%;
 
     --secondary: 217 33% 17%;
     --secondary-foreground: 210 40% 98%;
 
     --muted: 217 33% 15%;
-    --muted-foreground: 215 20.2% 65.1%;
+    --muted-foreground: 215 20% 65%;
 
     --accent: 217 33% 18%;
     --accent-foreground: 210 40% 98%;
 
-    --destructive: 0 84.2% 60.2%;
+    --destructive: 0 84% 60%;
     --destructive-foreground: 210 40% 98%;
 
     --border: 217 33% 18%;
     --input: 217 33% 18%;
-    --ring: 239 84% 67%;
-
-    --radius: 0.5rem;
-  }
-
-  .light {
-    --background: 0 0% 100%;
-    --foreground: 222 47% 11%;
-
-    --card: 0 0% 100%;
-    --card-foreground: 222 47% 11%;
-
-    --popover: 0 0% 100%;
-    --popover-foreground: 222 47% 11%;
-
-    --primary: 239 84% 60%;
-    --primary-foreground: 0 0% 100%;
-
-    --secondary: 210 40% 96.1%;
-    --secondary-foreground: 222 47% 11%;
-
-    --muted: 210 40% 96.1%;
-    --muted-foreground: 215.4 16.3% 46.9%;
-
-    --accent: 210 40% 96.1%;
-    --accent-foreground: 222 47% 11%;
-
-    --destructive: 0 84.2% 60.2%;
-    --destructive-foreground: 210 40% 98%;
-
-    --border: 214.3 31.8% 91.4%;
-    --input: 214.3 31.8% 91.4%;
-    --ring: 239 84% 60%;
+    --ring: 221 83% 53%;
   }
 }
 
@@ -72,7 +72,9 @@
   }
   body {
     @apply bg-background text-foreground;
-    font-feature-settings: "rlig" 1, "calt" 1;
+    font-feature-settings: "cv02", "cv03", "cv04", "cv11";
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
   }
 }
 
@@ -83,35 +85,51 @@
 }
 
 ::-webkit-scrollbar-track {
-  background: hsl(var(--background));
+  background: transparent;
 }
 
 ::-webkit-scrollbar-thumb {
-  background: hsl(var(--muted));
+  background: hsl(var(--muted-foreground) / 0.25);
   border-radius: 9999px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: hsl(var(--muted-foreground) / 0.5);
+  background: hsl(var(--muted-foreground) / 0.45);
 }
 
 /* Glassmorphism utility */
 .glass-panel {
-  background: rgba(15, 20, 32, 0.7);
+  background: rgba(255, 255, 255, 0.88);
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(226, 232, 240, 0.9);
+  box-shadow: 0 4px 20px -2px rgba(15, 23, 42, 0.05);
+}
+
+.dark .glass-panel {
+  background: rgba(15, 20, 32, 0.7);
   border: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow: 0 4px 20px -2px rgba(0, 0, 0, 0.3);
 }
 
 .glass-panel-subtle {
-  background: rgba(18, 24, 38, 0.4);
+  background: rgba(255, 255, 255, 0.6);
   backdrop-filter: blur(8px);
   -webkit-backdrop-filter: blur(8px);
+  border: 1px solid rgba(226, 232, 240, 0.6);
+}
+
+.dark .glass-panel-subtle {
+  background: rgba(18, 24, 38, 0.4);
   border: 1px solid rgba(255, 255, 255, 0.05);
 }
 
-/* Developer grid backdrop */
+/* Subtle SaaS grid backdrop */
 .dev-grid-bg {
-  background-image: radial-gradient(rgba(99, 102, 241, 0.12) 1px, transparent 1px);
+  background-image: radial-gradient(rgba(79, 70, 229, 0.08) 1px, transparent 1px);
   background-size: 24px 24px;
+}
+
+.dark .dev-grid-bg {
+  background-image: radial-gradient(rgba(99, 102, 241, 0.12) 1px, transparent 1px);
 }

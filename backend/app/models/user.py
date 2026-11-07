@@ -9,6 +9,8 @@ if TYPE_CHECKING:
     from app.models.submission import Submission
     from app.models.activity import UserActivity
     from app.models.assessment import Assessment, AssessmentAttempt
+    from app.models.bookmark import ChallengeBookmark
+    from app.models.code_draft import CodeDraft
 
 
 class User(Base):
@@ -38,4 +40,10 @@ class User(Base):
     )
     assessment_attempts: Mapped[List["AssessmentAttempt"]] = relationship(
         "AssessmentAttempt", back_populates="candidate", cascade="all, delete-orphan", lazy="select"
+    )
+    bookmarks: Mapped[List["ChallengeBookmark"]] = relationship(
+        "ChallengeBookmark", back_populates="user", cascade="all, delete-orphan", lazy="select"
+    )
+    code_drafts: Mapped[List["CodeDraft"]] = relationship(
+        "CodeDraft", back_populates="user", cascade="all, delete-orphan", lazy="select"
     )

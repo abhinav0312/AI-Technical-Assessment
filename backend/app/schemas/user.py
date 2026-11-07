@@ -1,6 +1,6 @@
 from datetime import datetime
 from typing import Optional, List
-from pydantic import BaseModel, EmailStr, Field
+from pydantic import BaseModel, EmailStr, Field, AliasChoices
 
 
 class UserProfileBase(BaseModel):
@@ -29,7 +29,12 @@ class UserProfileResponse(UserProfileBase):
 
 class UserBase(BaseModel):
     email: EmailStr
-    display_name: str = Field(..., min_length=2, max_length=100)
+    display_name: str = Field(
+        ...,
+        min_length=2,
+        max_length=100,
+        validation_alias=AliasChoices("display_name", "displayName", "name", "username"),
+    )
     role: str = Field(default="candidate")
 
 

@@ -1,5 +1,5 @@
 from typing import Optional
-from sqlalchemy import select
+from sqlalchemy import select, func, or_
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.orm import selectinload
 from app.models.user import User
@@ -25,6 +25,30 @@ class UserRepository:
             select(User)
             .options(selectinload(User.profile))
             .where(User.email == email.lower())
+        )
+        result = await self.db.execute(stmt)
+        return result.scalar_one_or_none()
+
+    async def get_by_identifier(self, identifier: str) -> Optional[User]:
+        clean_id = (identifier or "").strip()
+        if not clean_id:
+            return None
+        # 1. Try by exact email if looks like email
+        if "@" in clean_id:
+            user = await self.get_by_email(clean_id)
+            if user:
+                return user
+        # 2. Try by user ID or display name or email
+        stmt = (
+            select(User)
+            .options(selectinload(User.profile))
+            .where(
+                or_(
+                    User.email == clean_id.lower(),
+                    User.id == clean_id,
+                    func.lower(User.display_name) == clean_id.lower(),
+                )
+            )
         )
         result = await self.db.execute(stmt)
         return result.scalar_one_or_none()

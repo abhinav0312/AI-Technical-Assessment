@@ -65,6 +65,25 @@ async def get_current_active_user(
     return current_user
 
 
+async def get_current_user_optional(
+    token: Optional[str] = Depends(get_token_from_request),
+    db: AsyncSession = Depends(get_db),
+) -> Optional[User]:
+    if not token:
+        return None
+    payload = decode_access_token(token)
+    if not payload:
+        return None
+    user_id = payload.get("sub")
+    if not user_id:
+        return None
+    user_repo = UserRepository(db)
+    user = await user_repo.get_by_id(user_id)
+    if not user or user.account_status != "active":
+        return None
+    return user
+
+
 def require_roles(allowed_roles: List[str]):
     async def role_checker(current_user: User = Depends(get_current_user)) -> User:
         if current_user.role not in allowed_roles:

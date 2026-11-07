@@ -3,297 +3,395 @@ import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '@/features/auth/AuthContext';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { GoogleIcon } from '@/components/ui/google-icon';
-import { Terminal, Lock, Mail, AlertCircle, ArrowRight, Loader2, Sparkles, X } from 'lucide-react';
+import { GoogleAuthButton } from '@/components/auth/GoogleAuthButton';
+import { UserRole } from '@/types/auth';
+import {
+  Terminal,
+  Lock,
+  Mail,
+  User,
+  AlertCircle,
+  ArrowRight,
+  Loader2,
+  Sparkles,
+  CheckCircle2,
+} from 'lucide-react';
 
 export function LoginPage() {
-  const [email, setEmail] = useState('');
+  const [tab, setTab] = useState<'signin' | 'signup'>('signin');
+  // Form states
+  const [identifier, setIdentifier] = useState('');
+  const [displayName, setDisplayName] = useState('');
   const [password, setPassword] = useState('');
+  const [role, setRole] = useState<UserRole>('candidate');
   const [error, setError] = useState<string | null>(null);
+  const [successMessage, setSuccessMessage] = useState<string | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [isGoogleSubmitting, setIsGoogleSubmitting] = useState(false);
-  const [showGoogleModal, setShowGoogleModal] = useState(false);
 
-  const [googleEmail, setGoogleEmail] = useState('alex.developer@gmail.com');
-  const [googleName, setGoogleName] = useState('Alex Developer');
-
-  const { login, loginWithGoogle } = useAuth();
+  const { login, register } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
 
   const from = (location.state as any)?.from?.pathname || '/dashboard';
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleTabChange = (newTab: 'signin' | 'signup') => {
+    setTab(newTab);
+    setError(null);
+    setSuccessMessage(null);
+  };
+
+  const handleLoginSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError(null);
     setIsSubmitting(true);
 
     try {
-      await login({ email, password });
+      await login({ identifier: identifier.trim(), password });
       navigate(from, { replace: true });
     } catch (err: any) {
-      setError(err?.message || 'Invalid email or password. Please verify your credentials.');
+      setError(err?.message || 'Incorrect email/user ID or password. Please verify your credentials.');
     } finally {
       setIsSubmitting(false);
     }
   };
 
-  const handleGoogleAuth = async (customEmail?: string, customName?: string) => {
+  const handleRegisterSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
     setError(null);
-    setIsGoogleSubmitting(true);
+    setIsSubmitting(true);
+
     try {
-      await loginWithGoogle({
-        email: customEmail || googleEmail,
-        displayName: customName || googleName,
+      await register({
+        displayName: displayName.trim(),
+        email: identifier.trim().toLowerCase(),
+        password,
+        role,
       });
-      setShowGoogleModal(false);
-      navigate(from, { replace: true });
+      setSuccessMessage('Account created! Taking you to your dashboard...');
+      setTimeout(() => {
+        navigate(from, { replace: true });
+      }, 500);
     } catch (err: any) {
-      setError(err?.message || 'Google sign in failed. Please try again.');
+      setError(err?.message || 'Registration failed. Please check your information.');
     } finally {
-      setIsGoogleSubmitting(false);
+      setIsSubmitting(false);
     }
   };
 
-  const fillQuickDemo = (demoEmail: string) => {
-    setEmail(demoEmail);
+  const fillQuickDemo = (demoId: string) => {
+    setIdentifier(demoId);
     setPassword('Password123!');
   };
 
   return (
-    <div className="min-h-screen bg-background flex flex-col justify-center py-12 sm:px-6 lg:px-8 relative overflow-hidden">
-      {/* Background glow */}
-      <div className="absolute top-1/3 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[300px] bg-brand-500/10 blur-[100px] rounded-full pointer-events-none" />
-
+    <div className="min-h-screen bg-[#FAFAFC] text-slate-900 flex flex-col justify-center py-12 sm:px-6 lg:px-8 relative overflow-hidden font-sans">
       <div className="sm:mx-auto sm:w-full sm:max-w-md text-center relative z-10">
         <Link to="/" className="inline-flex items-center gap-2 mb-4 group">
-          <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-brand-500 to-indigo-600 text-white shadow-lg shadow-brand-500/20 group-hover:scale-105 transition-transform">
+          <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-brand-600 text-white shadow-xs group-hover:scale-105 transition-transform">
             <Terminal className="h-5 w-5" />
           </div>
-          <span className="text-2xl font-bold tracking-tight text-white">DevMind AI</span>
+          <span className="text-2xl font-bold tracking-tight text-slate-900">DevMind AI</span>
         </Link>
-        <h2 className="text-xl font-bold tracking-tight text-white">
-          Sign In to DevMind Intelligence
+        <h2 className="text-xl font-bold tracking-tight text-slate-900">
+          {tab === 'signin' ? 'Sign In to DevMind' : 'Create Your DevMind Account'}
         </h2>
-        <p className="mt-1 text-xs text-muted-foreground">
-          Access your interactive assessments, telemetry reports, and coding arena.
+        <p className="mt-1 text-xs text-slate-600">
+          {tab === 'signin'
+            ? 'Access your interactive assessments, telemetry reports, and coding arena.'
+            : 'Get started in seconds. You can easily log in anytime via email or username/user ID.'}
         </p>
       </div>
 
       <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-md relative z-10">
-        <div className="bg-surface-card border border-border/80 py-8 px-6 shadow-2xl rounded-2xl sm:px-10 backdrop-blur-xl">
+        <div className="bg-white border border-slate-200 py-8 px-6 shadow-md rounded-2xl sm:px-10">
+          {/* Tab Switcher: Sign In vs Sign Up */}
+          <div className="mb-6 flex rounded-xl bg-slate-100 p-1 border border-slate-200">
+            <button
+              type="button"
+              onClick={() => handleTabChange('signin')}
+              className={`flex-1 rounded-lg py-2 text-xs font-semibold transition-all ${
+                tab === 'signin'
+                  ? 'bg-white text-brand-700 shadow-xs'
+                  : 'text-slate-600 hover:text-slate-900'
+              }`}
+            >
+              Sign In
+            </button>
+            <button
+              type="button"
+              onClick={() => handleTabChange('signup')}
+              className={`flex-1 rounded-lg py-2 text-xs font-semibold transition-all ${
+                tab === 'signup'
+                  ? 'bg-white text-brand-700 shadow-xs'
+                  : 'text-slate-600 hover:text-slate-900'
+              }`}
+            >
+              Sign Up (Create Account)
+            </button>
+          </div>
+
           {error && (
-            <div className="mb-6 rounded-lg bg-rose-500/10 border border-rose-500/30 p-3.5 text-xs text-rose-300 flex items-start gap-2.5">
-              <AlertCircle className="h-4 w-4 shrink-0 mt-0.5 text-rose-400" />
+            <div className="mb-5 rounded-xl bg-rose-50 border border-rose-200 p-3.5 text-xs text-rose-700 flex items-start gap-2.5">
+              <AlertCircle className="h-4 w-4 shrink-0 mt-0.5 text-rose-500" />
               <span>{error}</span>
             </div>
           )}
 
-          {/* Google Sign In Button */}
-          <button
-            type="button"
-            onClick={() => setShowGoogleModal(true)}
-            disabled={isGoogleSubmitting || isSubmitting}
-            className="w-full flex items-center justify-center gap-3 py-2.5 px-4 rounded-xl border border-border/80 bg-surface-darkest hover:bg-surface-dark hover:border-slate-500 text-xs font-semibold text-white shadow-sm transition-all focus:outline-none focus:ring-2 focus:ring-brand-500 disabled:opacity-50 group mb-5"
-          >
-            <GoogleIcon className="h-4 w-4 shrink-0 transition-transform group-hover:scale-110" />
-            <span>Continue with Google</span>
-          </button>
+          {successMessage && (
+            <div className="mb-5 rounded-xl bg-emerald-50 border border-emerald-200 p-3.5 text-xs text-emerald-800 flex items-start gap-2.5">
+              <CheckCircle2 className="h-4 w-4 shrink-0 mt-0.5 text-emerald-600" />
+              <span>{successMessage}</span>
+            </div>
+          )}
+
+          {/* Google Single Sign-On Button */}
+          <GoogleAuthButton
+            mode={tab}
+            role={role}
+            onError={setError}
+            onSuccess={() => navigate(from, { replace: true })}
+          />
 
           {/* Divider */}
           <div className="relative my-6">
             <div className="absolute inset-0 flex items-center">
-              <div className="w-full border-t border-border/60" />
+              <div className="w-full border-t border-slate-200" />
             </div>
             <div className="relative flex justify-center text-[10px] uppercase">
-              <span className="bg-surface-card px-2.5 text-muted-foreground font-semibold">
-                Or sign in with email
+              <span className="bg-white px-2.5 text-slate-500 font-semibold">
+                {tab === 'signin' ? 'Or sign in with email or user id' : 'Or register with email'}
               </span>
             </div>
           </div>
 
-          <form onSubmit={handleSubmit} className="space-y-4">
-            <div>
-              <label className="block text-xs font-semibold text-slate-300 mb-1.5">
-                Work Email Address
-              </label>
-              <div className="relative">
-                <Mail className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-                <Input
-                  type="email"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  placeholder="engineer@company.com"
-                  required
-                  className="pl-9 text-xs"
-                />
+          {/* SIGN IN FORM */}
+          {tab === 'signin' && (
+            <form onSubmit={handleLoginSubmit} className="space-y-4">
+              <div>
+                <label className="block text-xs font-semibold text-slate-700 mb-1.5">
+                  Email, Username, or User ID
+                </label>
+                <div className="relative">
+                  <Mail className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400" />
+                  <Input
+                    type="text"
+                    value={identifier}
+                    onChange={(e) => setIdentifier(e.target.value)}
+                    placeholder="engineer@company.com or username / user ID"
+                    required
+                    className="pl-9 text-xs bg-slate-50 border-slate-200 text-slate-900 focus:bg-white"
+                  />
+                </div>
               </div>
-            </div>
 
-            <div>
-              <div className="flex items-center justify-between mb-1.5">
-                <label className="block text-xs font-semibold text-slate-300">
+              <div>
+                <div className="flex items-center justify-between mb-1.5">
+                  <label className="block text-xs font-semibold text-slate-700">
+                    Password
+                  </label>
+                  <a href="#forgot" className="text-[11px] text-brand-600 hover:text-brand-700 font-medium">
+                    Forgot password?
+                  </a>
+                </div>
+                <div className="relative">
+                  <Lock className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400" />
+                  <Input
+                    type="password"
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    placeholder="••••••••••••"
+                    required
+                    className="pl-9 text-xs bg-slate-50 border-slate-200 text-slate-900 focus:bg-white"
+                  />
+                </div>
+              </div>
+
+              <Button
+                type="submit"
+                disabled={isSubmitting}
+                className="w-full mt-2 gap-2 font-medium"
+              >
+                {isSubmitting ? (
+                  <>
+                    <Loader2 className="h-4 w-4 animate-spin" />
+                    Authenticating...
+                  </>
+                ) : (
+                  <>
+                    Sign In
+                    <ArrowRight className="h-4 w-4" />
+                  </>
+                )}
+              </Button>
+            </form>
+          )}
+
+          {/* SIGN UP FORM */}
+          {tab === 'signup' && (
+            <form onSubmit={handleRegisterSubmit} className="space-y-4">
+              <div>
+                <label className="block text-xs font-semibold text-slate-700 mb-1.5">
+                  Full Name / Username / User ID
+                </label>
+                <div className="relative">
+                  <User className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400" />
+                  <Input
+                    type="text"
+                    value={displayName}
+                    onChange={(e) => setDisplayName(e.target.value)}
+                    placeholder="e.g. Alex Mercer or alex_dev"
+                    required
+                    className="pl-9 text-xs bg-slate-50 border-slate-200 text-slate-900 focus:bg-white"
+                  />
+                </div>
+              </div>
+
+              <div>
+                <label className="block text-xs font-semibold text-slate-700 mb-1.5">
+                  Email Address
+                </label>
+                <div className="relative">
+                  <Mail className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400" />
+                  <Input
+                    type="email"
+                    value={identifier}
+                    onChange={(e) => setIdentifier(e.target.value)}
+                    placeholder="engineer@devmind.ai"
+                    required
+                    className="pl-9 text-xs bg-slate-50 border-slate-200 text-slate-900 focus:bg-white"
+                  />
+                </div>
+              </div>
+
+              <div>
+                <label className="block text-xs font-semibold text-slate-700 mb-1.5">
                   Password
                 </label>
-                <a href="#forgot" className="text-[11px] text-brand-400 hover:text-brand-300">
-                  Forgot password?
-                </a>
+                <div className="relative">
+                  <Lock className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400" />
+                  <Input
+                    type="password"
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    placeholder="Min 8 characters"
+                    required
+                    className="pl-9 text-xs bg-slate-50 border-slate-200 text-slate-900 focus:bg-white"
+                  />
+                </div>
               </div>
-              <div className="relative">
-                <Lock className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-                <Input
-                  type="password"
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  placeholder="••••••••••••"
-                  required
-                  className="pl-9 text-xs"
-                />
-              </div>
-            </div>
 
-            <Button
-              type="submit"
-              disabled={isSubmitting || isGoogleSubmitting}
-              className="w-full mt-2 gap-2"
-            >
-              {isSubmitting ? (
-                <>
-                  <Loader2 className="h-4 w-4 animate-spin" />
-                  Authenticating...
-                </>
-              ) : (
-                <>
-                  Sign In
-                  <ArrowRight className="h-4 w-4" />
-                </>
-              )}
-            </Button>
-          </form>
+              {/* Role selection */}
+              <div>
+                <label className="block text-xs font-semibold text-slate-700 mb-1.5">
+                  I am joining as:
+                </label>
+                <div className="grid grid-cols-3 gap-2">
+                  {(['candidate', 'creator', 'recruiter'] as UserRole[]).map((r) => (
+                    <button
+                      key={r}
+                      type="button"
+                      onClick={() => setRole(r)}
+                      className={`py-1.5 px-2 rounded-xl border text-xs font-semibold capitalize transition-all ${
+                        role === r
+                          ? 'border-brand-600 bg-brand-50 text-brand-700'
+                          : 'border-slate-200 bg-white text-slate-600 hover:bg-slate-50 hover:text-slate-900'
+                      }`}
+                    >
+                      {r}
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              <Button
+                type="submit"
+                disabled={isSubmitting}
+                className="w-full mt-2 gap-2 font-medium"
+              >
+                {isSubmitting ? (
+                  <>
+                    <Loader2 className="h-4 w-4 animate-spin" />
+                    Creating Account...
+                  </>
+                ) : (
+                  <>
+                    Create Account & Sign In
+                    <ArrowRight className="h-4 w-4" />
+                  </>
+                )}
+              </Button>
+            </form>
+          )}
 
           {/* Quick Demo Credentials */}
-          <div className="mt-6 pt-6 border-t border-border/50">
-            <div className="flex items-center justify-between mb-2">
-              <span className="text-[11px] font-semibold text-muted-foreground flex items-center gap-1.5">
-                <Sparkles className="h-3.5 w-3.5 text-brand-400" />
+          <div className="mt-6 pt-6 border-t border-slate-100">
+            <div className="flex items-center justify-between mb-2.5">
+              <span className="text-[11px] font-semibold text-slate-500 flex items-center gap-1.5">
+                <Sparkles className="h-3.5 w-3.5 text-brand-600" />
                 Quick Test Accounts:
               </span>
             </div>
             <div className="grid grid-cols-3 gap-2">
               <button
                 type="button"
-                onClick={() => fillQuickDemo('candidate@devmind.ai')}
-                className="py-1.5 px-2 rounded border border-border/60 bg-surface-darkest hover:border-brand-500/50 hover:bg-surface-dark text-[11px] text-slate-300 transition-colors"
+                onClick={() => {
+                  setTab('signin');
+                  fillQuickDemo('candidate@devmind.ai');
+                }}
+                className="py-1.5 px-2 rounded-lg border border-slate-200 bg-slate-50 hover:border-brand-300 hover:bg-slate-100 text-[11px] font-medium text-slate-700 transition-colors"
               >
                 Candidate
               </button>
               <button
                 type="button"
-                onClick={() => fillQuickDemo('creator@devmind.ai')}
-                className="py-1.5 px-2 rounded border border-border/60 bg-surface-darkest hover:border-brand-500/50 hover:bg-surface-dark text-[11px] text-slate-300 transition-colors"
+                onClick={() => {
+                  setTab('signin');
+                  fillQuickDemo('creator@devmind.ai');
+                }}
+                className="py-1.5 px-2 rounded-lg border border-slate-200 bg-slate-50 hover:border-brand-300 hover:bg-slate-100 text-[11px] font-medium text-slate-700 transition-colors"
               >
                 Creator
               </button>
               <button
                 type="button"
-                onClick={() => fillQuickDemo('admin@devmind.ai')}
-                className="py-1.5 px-2 rounded border border-border/60 bg-surface-darkest hover:border-brand-500/50 hover:bg-surface-dark text-[11px] text-slate-300 transition-colors"
+                onClick={() => {
+                  setTab('signin');
+                  fillQuickDemo('admin@devmind.ai');
+                }}
+                className="py-1.5 px-2 rounded-lg border border-slate-200 bg-slate-50 hover:border-brand-300 hover:bg-slate-100 text-[11px] font-medium text-slate-700 transition-colors"
               >
                 Admin
               </button>
             </div>
           </div>
 
-          <p className="mt-6 text-center text-xs text-muted-foreground">
-            Don't have an account yet?{' '}
-            <Link to="/register" className="font-semibold text-brand-400 hover:text-brand-300">
-              Create an account
-            </Link>
+          <p className="mt-6 text-center text-xs text-slate-600">
+            {tab === 'signin' ? (
+              <>
+                Don't have an account yet?{' '}
+                <button
+                  type="button"
+                  onClick={() => handleTabChange('signup')}
+                  className="font-semibold text-brand-600 hover:text-brand-700 underline"
+                >
+                  Sign Up (Create Account)
+                </button>
+              </>
+            ) : (
+              <>
+                Already have an account?{' '}
+                <button
+                  type="button"
+                  onClick={() => handleTabChange('signin')}
+                  className="font-semibold text-brand-600 hover:text-brand-700 underline"
+                >
+                  Sign In
+                </button>
+              </>
+            )}
           </p>
         </div>
       </div>
-
-      {/* Google Sign In Modal */}
-      {showGoogleModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm animate-in fade-in duration-150">
-          <div className="relative w-full max-w-sm rounded-2xl border border-border/80 bg-surface-card p-6 shadow-2xl space-y-5">
-            <div className="flex items-center justify-between pb-3 border-b border-border/50">
-              <div className="flex items-center gap-2.5">
-                <GoogleIcon className="h-5 w-5" />
-                <span className="text-sm font-bold text-white">Continue with Google</span>
-              </div>
-              <button
-                onClick={() => setShowGoogleModal(false)}
-                className="rounded-lg p-1 text-muted-foreground hover:bg-surface-dark hover:text-white"
-              >
-                <X className="h-4 w-4" />
-              </button>
-            </div>
-
-            <div className="text-xs text-muted-foreground leading-relaxed">
-              Sign in to your <span className="text-white font-medium">DevMind AI</span> workspace using Google Single Sign-On.
-            </div>
-
-            <div className="space-y-3">
-              <div>
-                <label className="block text-[11px] font-semibold text-slate-300 mb-1">
-                  Google Account Name
-                </label>
-                <Input
-                  type="text"
-                  value={googleName}
-                  onChange={(e) => setGoogleName(e.target.value)}
-                  className="text-xs h-9"
-                  placeholder="Your Name"
-                />
-              </div>
-
-              <div>
-                <label className="block text-[11px] font-semibold text-slate-300 mb-1">
-                  Google Email Address
-                </label>
-                <Input
-                  type="email"
-                  value={googleEmail}
-                  onChange={(e) => setGoogleEmail(e.target.value)}
-                  className="text-xs h-9"
-                  placeholder="name@gmail.com"
-                />
-              </div>
-            </div>
-
-            <div className="space-y-2 pt-2">
-              <Button
-                onClick={() => handleGoogleAuth()}
-                disabled={isGoogleSubmitting}
-                className="w-full gap-2 text-xs h-9"
-              >
-                {isGoogleSubmitting ? (
-                  <>
-                    <Loader2 className="h-3.5 w-3.5 animate-spin" />
-                    Authenticating with Google...
-                  </>
-                ) : (
-                  <>
-                    Sign In as {googleName.split(' ')[0] || 'User'}
-                    <ArrowRight className="h-3.5 w-3.5" />
-                  </>
-                )}
-              </Button>
-
-              <button
-                type="button"
-                onClick={() => handleGoogleAuth('developer.google@devmind.ai', 'Google Developer')}
-                disabled={isGoogleSubmitting}
-                className="w-full py-1.5 px-3 rounded-lg border border-border/60 bg-surface-darkest hover:border-brand-500/40 text-[11px] text-brand-300 flex items-center justify-center gap-1.5 transition-colors"
-              >
-                <Sparkles className="h-3 w-3" />
-                Quick 1-Click Google Sign In
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
     </div>
   );
 }

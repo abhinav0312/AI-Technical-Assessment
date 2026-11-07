@@ -1,11 +1,14 @@
 from datetime import datetime
-from typing import TYPE_CHECKING, List, Optional, Dict
+from typing import TYPE_CHECKING, List, Optional, Dict, Any
 from sqlalchemy import String, Text, DateTime, ForeignKey, Table, Column, JSON
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 from app.db.base import Base, generate_uuid, get_utc_now
 
 if TYPE_CHECKING:
     from app.models.submission import Submission
+    from app.models.test_case import TestCase
+    from app.models.bookmark import ChallengeBookmark
+    from app.models.code_draft import CodeDraft
 
 challenge_tag_association = Table(
     "challenge_tag_association",
@@ -49,6 +52,7 @@ class Challenge(Base):
     starter_code: Mapped[Optional[Dict[str, str]]] = mapped_column(JSON, nullable=True)
     supported_languages: Mapped[List[str]] = mapped_column(JSON, default=list, nullable=False)
     visibility: Mapped[str] = mapped_column(String(20), default="public", nullable=False)  # public, private, unlisted
+    reasoning_config: Mapped[Optional[Dict[str, Any]]] = mapped_column(JSON, nullable=True)
     created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=get_utc_now, nullable=False)
     updated_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=get_utc_now, onupdate=get_utc_now, nullable=False)
 
@@ -58,4 +62,17 @@ class Challenge(Base):
     )
     submissions: Mapped[List["Submission"]] = relationship(
         "Submission", back_populates="challenge", cascade="all, delete-orphan", lazy="select"
+    )
+    test_cases: Mapped[List["TestCase"]] = relationship(
+        "TestCase",
+        back_populates="challenge",
+        cascade="all, delete-orphan",
+        lazy="select",
+        order_by="TestCase.order_index",
+    )
+    bookmarks: Mapped[List["ChallengeBookmark"]] = relationship(
+        "ChallengeBookmark", back_populates="challenge", cascade="all, delete-orphan", lazy="select"
+    )
+    code_drafts: Mapped[List["CodeDraft"]] = relationship(
+        "CodeDraft", back_populates="challenge", cascade="all, delete-orphan", lazy="select"
     )

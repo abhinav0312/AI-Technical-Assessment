@@ -4,8 +4,15 @@ from app.schemas.user import UserResponse
 
 
 class LoginRequest(BaseModel):
-    email: EmailStr
+    email: Optional[str] = None
+    identifier: Optional[str] = None
+    username: Optional[str] = None
+    user_id: Optional[str] = None
     password: str
+
+    @property
+    def login_identifier(self) -> str:
+        return (self.identifier or self.email or self.username or self.user_id or "").strip()
 
 
 class PasswordRecoveryRequest(BaseModel):
@@ -24,8 +31,5 @@ class TokenResponse(BaseModel):
 
 
 class GoogleAuthRequest(BaseModel):
-    credential: Optional[str] = None
-    email: Optional[EmailStr] = None
-    display_name: Optional[str] = None
+    credential: str
     role: Optional[str] = "candidate"
-

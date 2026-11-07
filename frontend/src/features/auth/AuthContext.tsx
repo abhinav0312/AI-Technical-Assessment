@@ -8,7 +8,7 @@ interface AuthContextType {
   isAuthenticated: boolean;
   login: (credentials: LoginCredentials) => Promise<void>;
   register: (credentials: RegisterCredentials) => Promise<void>;
-  loginWithGoogle: (data?: { credential?: string; email?: string; displayName?: string; role?: UserRole }) => Promise<void>;
+  loginWithGoogle: (data: { credential: string; role?: UserRole }) => Promise<void>;
   logout: () => Promise<void>;
   refreshUser: () => Promise<void>;
 }
@@ -36,9 +36,14 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   }, [fetchCurrentUser]);
 
   const login = async (credentials: LoginCredentials) => {
+    const payload = {
+      identifier: credentials.identifier || credentials.email,
+      email: credentials.email || credentials.identifier,
+      password: credentials.password,
+    };
     const data = await apiClient<{ user: User; access_token: string }>('/auth/login', {
       method: 'POST',
-      body: JSON.stringify(credentials),
+      body: JSON.stringify(payload),
     });
 
     if (data.access_token) {
@@ -50,7 +55,13 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const register = async (credentials: RegisterCredentials) => {
     const data = await apiClient<{ user: User; access_token: string }>('/auth/register', {
       method: 'POST',
-      body: JSON.stringify(credentials),
+      body: JSON.stringify({
+        displayName: credentials.displayName,
+        display_name: credentials.displayName,
+        email: credentials.email,
+        password: credentials.password,
+        role: credentials.role || 'candidate',
+      }),
     });
 
     if (data.access_token) {
@@ -59,17 +70,10 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     setUser(data.user);
   };
 
-  const loginWithGoogle = async (data?: { credential?: string; email?: string; displayName?: string; role?: UserRole }) => {
-    const payload = {
-      credential: data?.credential,
-      email: data?.email || 'google.developer@devmind.ai',
-      display_name: data?.displayName || 'Google Engineer',
-      role: data?.role || 'candidate',
-    };
-
+  const loginWithGoogle = async (data: { credential: string; role?: UserRole }) => {
     const res = await apiClient<{ user: User; access_token: string }>('/auth/google', {
       method: 'POST',
-      body: JSON.stringify(payload),
+      body: JSON.stringify({ credential: data.credential, role: data.role || 'candidate' }),
     });
 
     if (res.access_token) {
