@@ -15,13 +15,21 @@ setup_logging()
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     logger.info(f"Starting {settings.PROJECT_NAME} v{settings.VERSION} [{settings.ENVIRONMENT}]")
+    is_serverless = (
+        os.environ.get("VERCEL") == "1"
+        or os.environ.get("VERCEL_ENV") is not None
+        or os.environ.get("AWS_LAMBDA_FUNCTION_NAME") is not None
+        or os.environ.get("LAMBDA_TASK_ROOT") is not None
+    )
     try:
         await init_db()
-        start_evaluator_worker()
+        if not is_serverless:
+            start_evaluator_worker()
     except Exception as e:
         logger.error(f"Error during database initialization: {e}")
     yield
-    stop_evaluator_worker()
+    if not is_serverless:
+        stop_evaluator_worker()
     logger.info(f"Shutting down {settings.PROJECT_NAME}")
 
 

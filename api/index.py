@@ -1,23 +1,46 @@
 import os
 import sys
+import traceback
 from pathlib import Path
 
 # Locate backend/app directory across serverless container execution layouts
-api_dir = Path(__file__).resolve().parent
-candidates = [
-    api_dir.parent / "backend",
-    api_dir / "backend",
-    Path.cwd() / "backend",
-    Path("/var/task/backend"),
-    Path("/var/task"),
-    api_dir.parent,
-    Path.cwd(),
+current_file = Path(__file__).resolve()
+api_dir = current_file.parent
+root_dir = api_dir.parent
+
+search_paths = [
+    str(root_dir / "backend"),
+    str(api_dir / "backend"),
+    str(root_dir),
+    str(api_dir),
+    "/var/task/backend",
+    "/var/task",
+    os.path.join(os.getcwd(), "backend"),
+    os.getcwd(),
 ]
 
-for candidate in candidates:
-    if candidate.exists() and (candidate / "app").exists():
-        if str(candidate) not in sys.path:
-            sys.path.insert(0, str(candidate))
-        break
+for p in search_paths:
+    if os.path.exists(p) and p not in sys.path:
+        sys.path.insert(0, p)
 
-from app.main import app
+try:
+    from app.main import app
+except Exception as e:
+    err_tb = traceback.format_exc()
+    from fastapi import FastAPI
+    from fastapi.responses import JSONResponse
+
+    app = FastAPI(title="DevMind API Error Handler")
+
+    @app.api_route("/{path:path}", methods=["GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS", "HEAD"])
+    async def catch_all(path: str):
+        return JSONResponse(
+            status_code=500,
+            content={
+                "error": "Backend Startup Failed",
+                "detail": str(e),
+                "traceback": err_tb,
+                "sys_path": sys.path,
+                "cwd": os.getcwd(),
+            },
+        )

@@ -7,13 +7,20 @@ from app.core.config import settings
 # Resolve database URL
 db_url = settings.DATABASE_URL
 
+# Determine if running in Vercel or AWS Lambda serverless execution context
+is_serverless = (
+    os.environ.get("VERCEL") == "1"
+    or os.environ.get("VERCEL_ENV") is not None
+    or os.environ.get("AWS_LAMBDA_FUNCTION_NAME") is not None
+    or os.environ.get("LAMBDA_TASK_ROOT") is not None
+)
+
 # On Vercel / serverless or generic deployments, if using relative SQLite, resolve to absolute path
 # or fallback to writable /tmp if in read-only serverless environment
 if db_url.startswith("sqlite"):
     raw_path = db_url.replace("sqlite+aiosqlite:///", "").replace("sqlite:///", "")
     if not os.path.isabs(raw_path):
-        # Check if running in Vercel lambda (VERCEL env var is '1')
-        if os.environ.get("VERCEL") == "1":
+        if is_serverless:
             target_dir = Path("/tmp")
             target_path = target_dir / Path(raw_path).name
             # If bundled db exists in app root, copy it to /tmp if not already there
