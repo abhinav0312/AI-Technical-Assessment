@@ -68,12 +68,29 @@ class SubprocessRunner:
             sterile_env = get_sterile_env(temp_dir)
             lang = language.lower()
 
+            compile_cmd = None
+            run_cmd = None
+
             if lang == "python":
                 file_name = "solution.py"
-                cmd = [sys.executable, "-u", file_name]
-            elif lang in ("typescript", "javascript", "node"):
+                run_cmd = [sys.executable, "-u", file_name]
+            elif lang in ("typescript", "javascript", "node", "js", "ts"):
                 file_name = "solution.js"
-                cmd = ["node", file_name]
+                run_cmd = ["node", file_name]
+            elif lang == "c":
+                file_name = "solution.c"
+                out_binary = "solution.exe" if sys.platform == "win32" else "solution"
+                compile_cmd = ["gcc", "-O2", file_name, "-o", out_binary]
+                run_cmd = [os.path.join(temp_dir, out_binary)]
+            elif lang in ("cpp", "c++"):
+                file_name = "solution.cpp"
+                out_binary = "solution.exe" if sys.platform == "win32" else "solution"
+                compile_cmd = ["g++", "-O2", "-std=c++17", file_name, "-o", out_binary]
+                run_cmd = [os.path.join(temp_dir, out_binary)]
+            elif lang == "java":
+                file_name = "Solution.java"
+                compile_cmd = ["javac", file_name]
+                run_cmd = ["java", "-Xmx256m", "Solution"]
             else:
                 return SubprocessResult(
                     stdout="",
@@ -101,13 +118,55 @@ class SubprocessRunner:
                         compilation_error=f"SyntaxError on line {syn_err.lineno}: {syn_err.msg}\n{syn_err.text or ''}",
                     )
 
+            # Ahead-of-time compilation for compiled languages (C, C++, Java)
+            if compile_cmd:
+                try:
+                    c_proc = await asyncio.create_subprocess_exec(
+                        *compile_cmd,
+                        stdout=asyncio.subprocess.PIPE,
+                        stderr=asyncio.subprocess.PIPE,
+                        cwd=temp_dir,
+                        env=sterile_env,
+                    )
+                    c_stdout, c_stderr = await asyncio.wait_for(c_proc.communicate(), timeout=8.0)
+                    if c_proc.returncode != 0:
+                        comp_err = (
+                            c_stderr.decode("utf-8", errors="replace")
+                            or c_stdout.decode("utf-8", errors="replace")
+                            or "Compilation failed"
+                        )
+                        return SubprocessResult(
+                            stdout="",
+                            stderr=comp_err,
+                            exit_code=c_proc.returncode or 1,
+                            execution_time_ms=0.0,
+                            compilation_error=comp_err,
+                        )
+                except FileNotFoundError:
+                    tool_name = compile_cmd[0]
+                    return SubprocessResult(
+                        stdout="",
+                        stderr=f"Compiler '{tool_name}' not available on execution worker.",
+                        exit_code=-1,
+                        execution_time_ms=0.0,
+                        compilation_error=f"Compiler '{tool_name}' is not installed in the worker runtime.",
+                    )
+                except asyncio.TimeoutError:
+                    return SubprocessResult(
+                        stdout="",
+                        stderr="Compilation timed out after 8.0 seconds.",
+                        exit_code=-1,
+                        execution_time_ms=8000.0,
+                        compilation_error="Compilation timed out.",
+                    )
+
             # Launch isolated subprocess
             stdin_bytes = stdin_data.encode("utf-8")
             start_time = time.perf_counter()
 
             try:
                 proc = await asyncio.create_subprocess_exec(
-                    *cmd,
+                    *run_cmd,
                     stdin=asyncio.subprocess.PIPE,
                     stdout=asyncio.subprocess.PIPE,
                     stderr=asyncio.subprocess.PIPE,

@@ -22,7 +22,7 @@ class SimpleRateLimiter:
 
 from app.core.config import settings
 
-auth_limiter = SimpleRateLimiter(max_requests=10, window_seconds=60)
+auth_limiter = SimpleRateLimiter(max_requests=60, window_seconds=60)
 
 async def check_rate_limit(request: Request):
     client_ip = request.client.host if request.client else "unknown"

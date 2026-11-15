@@ -16,6 +16,8 @@ class ThinkTraceEvalInput(BaseModel):
     code_execution_status: Optional[str] = None  # accepted, wrong_answer, etc.
     passed_tests: Optional[int] = 0
     total_tests: Optional[int] = 0
+    language: Optional[str] = "python"
+    tier: Optional[str] = "flash_pro"  # "flash_lite" vs "flash_pro"
 
 
 class RubricDimensionScore(BaseModel):
@@ -55,5 +57,8 @@ class ThinkTraceServiceResult(BaseModel):
     evaluation: ThinkTraceAIOutput
     provider: str
     model: str
+    tier: str = "flash_pro"
     is_fallback: bool
     token_usage: Dict[str, Any] = Field(default_factory=dict)
+    diagnostic_metrics: Optional[Dict[str, Any]] = None
+    latency_ms: Optional[float] = None

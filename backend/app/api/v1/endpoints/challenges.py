@@ -206,6 +206,24 @@ async def run_sample_tests(
     if not challenge:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Challenge not found.")
 
+    # Support custom input execution if provided by candidate
+    if run_req.custom_input is not None:
+        custom_tc = TestCase(
+            challenge_id=challenge.id,
+            stdin=run_req.custom_input,
+            expected_output="",
+            is_sample=True,
+            order_index=1,
+            description="Custom Input Execution",
+        )
+        summary = await EvaluationEngine.evaluate_submission(
+            language=run_req.language,
+            source_code=run_req.source_code,
+            test_cases=[custom_tc],
+            is_sample_only=True,
+        )
+        return summary
+
     sample_tests = [tc for tc in challenge.test_cases if tc.is_sample]
     if not sample_tests:
         raise HTTPException(

@@ -1,5 +1,5 @@
 import json
-from typing import List, Union
+from typing import List, Union, Optional
 from pydantic_settings import BaseSettings, SettingsConfigDict
 from pydantic import field_validator
 
@@ -56,6 +56,15 @@ class Settings(BaseSettings):
     AUTH_COOKIE_NAME: str = "devmind_access_token"
     AUTH_COOKIE_SECURE: bool = False  # Set to True when using HTTPS in production
     AUTH_COOKIE_SAMESITE: str = "lax"
+
+    # SMTP / Email settings
+    SMTP_HOST: Optional[str] = None
+    SMTP_PORT: int = 587
+    SMTP_USER: Optional[str] = None
+    SMTP_PASSWORD: Optional[str] = None
+    EMAILS_FROM_EMAIL: str = "security@devmind.ai"
+    EMAILS_FROM_NAME: str = "DevMind AI Security"
+    SMTP_TLS: bool = True
 
     model_config = SettingsConfigDict(
         env_file=".env",

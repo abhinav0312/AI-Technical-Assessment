@@ -14,7 +14,7 @@ export function FeaturesPage() {
       icon: Cpu,
       title: 'Sub-Second Sandboxed Execution',
       badge: 'CODE Pillar',
-      description: 'Micro-isolated execution containers for Python 3.12, TypeScript 5.6, Go 1.23, and Rust 1.82 with precise resource and memory boundaries.',
+      description: 'Micro-isolated execution containers for Python 3.12, TypeScript 5.6, C/C++, Java, and JavaScript with precise resource and memory boundaries.',
     },
     {
       icon: Layers,
@@ -43,19 +43,19 @@ export function FeaturesPage() {
   ];
 
   return (
-    <div className="min-h-screen bg-background text-foreground flex flex-col">
+    <div className="min-h-screen bg-[#1a1a1a] text-[#eff2f6] flex flex-col font-sans">
       <Navbar />
 
       <main className="flex-1 py-16">
         <div className="container mx-auto max-w-7xl px-4 sm:px-6">
           <div className="text-center max-w-3xl mx-auto mb-16 space-y-4">
-            <span className="text-xs font-semibold text-brand-400 uppercase tracking-widest">
+            <span className="text-xs font-bold text-[#ffa116] uppercase tracking-widest bg-[#ffa116]/15 border border-[#ffa116]/30 px-3 py-1 rounded-full">
               Platform Features & Architecture
             </span>
-            <h1 className="text-3xl sm:text-5xl font-extrabold text-white tracking-tight">
+            <h1 className="text-3xl sm:text-5xl font-extrabold text-[#ffffff] tracking-tight">
               Engineering Assessment Reimagined
             </h1>
-            <p className="text-sm sm:text-base text-muted-foreground leading-relaxed">
+            <p className="text-sm sm:text-base text-[#9ca3af] leading-relaxed">
               Explore the complete architectural matrix that powers DevMind AI's next-generation cognitive evaluation environment.
             </p>
           </div>
@@ -66,18 +66,18 @@ export function FeaturesPage() {
               return (
                 <div
                   key={i}
-                  className="p-6 rounded-xl border border-border/70 bg-surface-card hover:border-brand-500/40 transition-all duration-200"
+                  className="p-6 rounded-2xl border border-[#383838] bg-[#262626] hover:border-[#ffa116]/50 transition-all duration-200 shadow-md space-y-3"
                 >
-                  <div className="flex items-center justify-between mb-4">
-                    <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-brand-500/10 text-brand-400 border border-brand-500/20">
+                  <div className="flex items-center justify-between mb-2">
+                    <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-[#ffa116]/15 text-[#ffa116] border border-[#ffa116]/30">
                       <Icon className="h-5 w-5" />
                     </div>
-                    <span className="text-[10px] font-mono uppercase px-2 py-0.5 rounded bg-surface-darkest border border-border/50 text-slate-300">
+                    <span className="text-[10px] font-mono font-bold uppercase px-2 py-0.5 rounded bg-[#1e1e1e] border border-[#383838] text-[#d1d5db]">
                       {c.badge}
                     </span>
                   </div>
-                  <h3 className="text-base font-bold text-white mb-2">{c.title}</h3>
-                  <p className="text-xs text-muted-foreground leading-relaxed">{c.description}</p>
+                  <h3 className="text-base font-bold text-[#ffffff]">{c.title}</h3>
+                  <p className="text-xs text-[#9ca3af] leading-relaxed">{c.description}</p>
                 </div>
               );
             })}

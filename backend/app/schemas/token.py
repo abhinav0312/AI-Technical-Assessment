@@ -33,3 +33,30 @@ class TokenResponse(BaseModel):
 class GoogleAuthRequest(BaseModel):
     credential: str
     role: Optional[str] = "candidate"
+
+
+class ResetPasswordRequest(BaseModel):
+    email: str
+    new_password: str
+
+
+class SendOtpRequest(BaseModel):
+    email: EmailStr
+    purpose: str = "signup"  # "signup" or "password_reset"
+    display_name: Optional[str] = None
+    password: Optional[str] = None
+    role: Optional[str] = "candidate"
+
+
+class SendOtpResponse(BaseModel):
+    message: str
+    email: str
+    purpose: str
+    dev_code: Optional[str] = None
+
+
+class VerifyOtpRequest(BaseModel):
+    email: EmailStr
+    code: str
+    purpose: str = "signup"
+    new_password: Optional[str] = None

@@ -31,11 +31,11 @@ export function ProtectedRoute({ children, allowedRoles }: ProtectedRouteProps) 
 
   if (allowedRoles && !allowedRoles.includes(user.role)) {
     return (
-      <div className="flex h-screen w-full items-center justify-center bg-background text-foreground p-6">
-        <div className="max-w-md text-center p-8 border border-border/80 rounded-xl bg-surface-card">
+      <div className="flex h-screen w-full items-center justify-center bg-[#1a1a1a] text-[#eff2f6] p-6">
+        <div className="max-w-md text-center p-8 border border-[#383838] rounded-2xl bg-[#262626] shadow-xl">
           <h2 className="text-xl font-bold text-rose-400">Access Restricted</h2>
-          <p className="text-sm text-muted-foreground mt-2">
-            Your current role (<span className="capitalize font-semibold text-slate-200">{user.role}</span>) does not have authorization to view this resource.
+          <p className="text-sm text-[#9ca3af] mt-2">
+            Your current role (<span className="capitalize font-bold text-[#ffffff]">{user.role}</span>) does not have authorization to view this resource.
           </p>
         </div>
       </div>

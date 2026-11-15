@@ -56,7 +56,8 @@ class EvaluateReasoningRequest(BaseModel):
     reasoning: Optional[ReasoningRecordCreateOrUpdate] = None
     submission_id: Optional[str] = None
     source_code: Optional[str] = None
-    language: Optional[str] = Field(default="python", pattern="^(python|typescript|javascript)$")
+    language: Optional[str] = Field(default="python", pattern="^(python|typescript|javascript|c|cpp|java)$")
+    tier: Optional[str] = Field(default="flash_pro", pattern="^(flash_lite|flash_pro)$")
 
 
 class HumanReviewRequest(BaseModel):
@@ -105,10 +106,13 @@ class ThinkTraceReportResponse(BaseModel):
     prompt_version: str
     ai_provider: str
     ai_model: str
+    tier: Optional[str] = "flash_pro"
     is_fallback: bool
     confidence_score: float
     confidence_level: str
     token_usage: Dict[str, Any] = Field(default_factory=dict)
+    diagnostic_metrics: Optional[Dict[str, Any]] = None
+    latency_ms: Optional[float] = None
 
     # Human Review
     human_reviewed: bool

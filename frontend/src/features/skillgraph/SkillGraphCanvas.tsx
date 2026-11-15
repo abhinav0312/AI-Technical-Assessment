@@ -199,7 +199,7 @@ export function SkillGraphCanvas({
   return (
     <div
       ref={containerRef}
-      className="relative w-full h-full overflow-hidden select-none bg-slate-50/70 cursor-grab active:cursor-grabbing border border-slate-200 rounded-2xl shadow-xs"
+      className="relative w-full h-full overflow-hidden select-none bg-[#1a1a1a] cursor-grab active:cursor-grabbing border border-[#383838] rounded-2xl shadow-sm"
       onMouseDown={handleMouseDown}
       onMouseMove={handleMouseMove}
       onMouseUp={handleMouseUp}
@@ -207,65 +207,65 @@ export function SkillGraphCanvas({
       onWheel={handleWheel}
     >
       {/* Floating Canvas Controls Toolbar */}
-      <div className="absolute top-4 right-4 z-30 flex items-center gap-1.5 bg-white/95 backdrop-blur-md p-1.5 rounded-xl border border-slate-200 shadow-md">
+      <div className="absolute top-4 right-4 z-30 flex items-center gap-1.5 bg-[#262626]/95 backdrop-blur-md p-1.5 rounded-xl border border-[#383838] shadow-md">
         <button
           onClick={handleZoomIn}
           title="Zoom In"
-          className="p-1.5 rounded-lg text-slate-600 hover:text-slate-900 hover:bg-slate-100 transition-colors"
+          className="p-1.5 rounded-lg text-[#9ca3af] hover:text-[#ffffff] hover:bg-[#383838] transition-colors"
         >
           <ZoomIn className="h-4 w-4" />
         </button>
         <button
           onClick={handleZoomOut}
           title="Zoom Out"
-          className="p-1.5 rounded-lg text-slate-600 hover:text-slate-900 hover:bg-slate-100 transition-colors"
+          className="p-1.5 rounded-lg text-[#9ca3af] hover:text-[#ffffff] hover:bg-[#383838] transition-colors"
         >
           <ZoomOut className="h-4 w-4" />
         </button>
-        <div className="w-[1px] h-4 bg-slate-200 mx-0.5" />
+        <div className="w-[1px] h-4 bg-[#383838] mx-0.5" />
         <button
           onClick={handleResetView}
           title="Reset View"
-          className="p-1.5 rounded-lg text-slate-600 hover:text-slate-900 hover:bg-slate-100 transition-colors"
+          className="p-1.5 rounded-lg text-[#9ca3af] hover:text-[#ffffff] hover:bg-[#383838] transition-colors"
         >
           <RotateCcw className="h-4 w-4" />
         </button>
         <button
           onClick={handleFitView}
           title="Fit View"
-          className="p-1.5 rounded-lg text-slate-600 hover:text-slate-900 hover:bg-slate-100 transition-colors"
+          className="p-1.5 rounded-lg text-[#9ca3af] hover:text-[#ffffff] hover:bg-[#383838] transition-colors"
         >
           <Maximize2 className="h-4 w-4" />
         </button>
-        <span className="text-[11px] font-mono text-slate-500 px-2">
+        <span className="text-[11px] font-mono text-[#9ca3af] px-2">
           {Math.round(transform.scale * 100)}%
         </span>
       </div>
 
       {/* Legend & Accessibility Key */}
-      <div className="absolute bottom-4 left-4 z-30 bg-white/95 backdrop-blur-md px-4 py-2.5 rounded-xl border border-slate-200 shadow-md flex items-center gap-4 text-[11px]">
-        <span className="text-slate-500 font-semibold text-[10px] uppercase tracking-wider">
+      <div className="absolute bottom-4 left-4 z-30 bg-[#262626]/95 backdrop-blur-md px-4 py-2.5 rounded-xl border border-[#383838] shadow-md flex items-center gap-4 text-[11px] text-[#eff2f6]">
+        <span className="text-[#9ca3af] font-semibold text-[10px] uppercase tracking-wider">
           Legend:
         </span>
-        <div className="flex items-center gap-1.5 text-emerald-700 font-medium">
-          <Star className="h-3.5 w-3.5 fill-emerald-500 text-emerald-500" />
+        <div className="flex items-center gap-1.5 text-[#00b8a3] font-medium">
+          <Star className="h-3.5 w-3.5 fill-[#00b8a3] text-[#00b8a3]" />
           <span>Mastered</span>
         </div>
-        <div className="flex items-center gap-1.5 text-indigo-700 font-medium">
-          <ShieldCheck className="h-3.5 w-3.5 text-indigo-600" />
+        <div className="flex items-center gap-1.5 text-sky-400 font-medium">
+          <ShieldCheck className="h-3.5 w-3.5 text-sky-400" />
           <span>Proficient</span>
         </div>
-        <div className="flex items-center gap-1.5 text-amber-700 font-medium">
-          <Zap className="h-3.5 w-3.5 text-amber-500" />
+        <div className="flex items-center gap-1.5 text-[#ffa116] font-medium">
+          <Zap className="h-3.5 w-3.5 text-[#ffa116]" />
           <span>Developing</span>
         </div>
-        <div className="flex items-center gap-1.5 text-slate-500 font-medium">
-          <HelpCircle className="h-3.5 w-3.5 text-slate-400" />
+        <div className="flex items-center gap-1.5 text-[#9ca3af] font-medium">
+          <HelpCircle className="h-3.5 w-3.5 text-[#9ca3af]" />
           <span>Unassessed</span>
         </div>
-        <div className="w-[1px] h-3.5 bg-slate-200 mx-1" />
-        <div className="flex items-center gap-1 text-slate-500 text-[10px]">
-          <ArrowRight className="h-3 w-3 text-brand-600" /> Prerequisite direction
+        <div className="w-[1px] h-3.5 bg-[#383838] mx-1" />
+        <div className="flex items-center gap-1 text-[#9ca3af] text-[10px]">
+          <ArrowRight className="h-3 w-3 text-[#ffa116]" /> Prerequisite direction
         </div>
       </div>
 
@@ -346,7 +346,7 @@ export function SkillGraphCanvas({
                 y1={30}
                 x2={dh.x + NODE_WIDTH / 2}
                 y2={1100}
-                stroke="#e2e8f0"
+                stroke="#2a2a2a"
                 strokeWidth="1.5"
                 strokeDasharray="4,8"
               />
@@ -357,14 +357,14 @@ export function SkillGraphCanvas({
                 width={NODE_WIDTH + 20}
                 height={32}
                 rx={8}
-                fill="#ffffff"
-                stroke="#e2e8f0"
+                fill="#262626"
+                stroke="#383838"
                 strokeWidth="1"
               />
               <text
                 x={dh.x + NODE_WIDTH / 2}
                 y={36}
-                fill="#475569"
+                fill="#d1d5db"
                 fontSize="11.5"
                 fontWeight="700"
                 textAnchor="middle"
@@ -466,39 +466,39 @@ export function SkillGraphCanvas({
             }
 
             // Visual themes based on mastery level
-            let strokeColor = '#e2e8f0';
-            let fillColor = '#ffffff';
-            let badgeBg = '#f8fafc';
-            let badgeText = '#475569';
+            let strokeColor = '#383838';
+            let fillColor = '#262626';
+            let badgeBg = '#1e1e1e';
+            let badgeText = '#9ca3af';
             let badgeLabel = '? Unassessed';
 
             switch (node.mastery_level) {
               case 'mastered':
-                strokeColor = '#10b981';
-                fillColor = '#ffffff';
-                badgeBg = '#ecfdf5';
-                badgeText = '#047857';
+                strokeColor = '#00b8a3';
+                fillColor = '#262626';
+                badgeBg = '#00b8a320';
+                badgeText = '#00b8a3';
                 badgeLabel = '★ Mastered';
                 break;
               case 'proficient':
-                strokeColor = '#6366f1';
-                fillColor = '#ffffff';
-                badgeBg = '#eef2ff';
-                badgeText = '#4338ca';
+                strokeColor = '#38bdf8';
+                fillColor = '#262626';
+                badgeBg = '#0284c725';
+                badgeText = '#38bdf8';
                 badgeLabel = '✓ Proficient';
                 break;
               case 'developing':
-                strokeColor = '#f59e0b';
-                fillColor = '#ffffff';
-                badgeBg = '#fffbeb';
-                badgeText = '#b45309';
+                strokeColor = '#ffa116';
+                fillColor = '#262626';
+                badgeBg = '#ffa11620';
+                badgeText = '#ffa116';
                 badgeLabel = '⚡ Developing';
                 break;
               default:
-                strokeColor = '#e2e8f0';
-                fillColor = '#ffffff';
-                badgeBg = '#f8fafc';
-                badgeText = '#64748b';
+                strokeColor = '#383838';
+                fillColor = '#262626';
+                badgeBg = '#1e1e1e';
+                badgeText = '#9ca3af';
                 badgeLabel = '? Unassessed';
                 break;
             }
@@ -506,13 +506,13 @@ export function SkillGraphCanvas({
             // Relationship ring highlight
             let haloColor: string | null = null;
             if (isSelected) {
-              haloColor = '#4f46e5';
+              haloColor = '#ffa116';
             } else if (isHovered) {
-              haloColor = '#818cf8';
+              haloColor = '#ffa116aa';
             } else if (isAncestor) {
-              haloColor = '#10b981'; // Emerald halo for satisfied prerequisite
+              haloColor = '#00b8a3'; // Emerald halo for satisfied prerequisite
             } else if (isDescendant) {
-              haloColor = '#6366f1'; // Indigo halo for unlocked dependent
+              haloColor = '#38bdf8'; // Sky halo for unlocked dependent
             }
 
             const profVal =
@@ -600,14 +600,14 @@ export function SkillGraphCanvas({
                         width={65}
                         height={18}
                         rx={4}
-                        fill="#fff1f2"
-                        stroke="#fecdd3"
+                        fill="#ff375f20"
+                        stroke="#ff375f50"
                         strokeWidth="0.8"
                       />
                       <text
                         x={6}
                         y={13}
-                        fill="#e11d48"
+                        fill="#ff375f"
                         fontSize="9.5"
                         fontWeight="700"
                         fontFamily="system-ui, sans-serif"
@@ -622,7 +622,7 @@ export function SkillGraphCanvas({
                 <text
                   x={12}
                   y={46}
-                  fill="#0f172a"
+                  fill="#ffffff"
                   fontSize="12.5"
                   fontWeight="700"
                   fontFamily="system-ui, sans-serif"
@@ -636,7 +636,7 @@ export function SkillGraphCanvas({
                   <text
                     x={0}
                     y={14}
-                    fill={node.proficiency ? '#4f46e5' : '#64748b'}
+                    fill={node.proficiency ? '#ffa116' : '#9ca3af'}
                     fontSize="13"
                     fontWeight="800"
                     fontFamily="monospace"
@@ -646,7 +646,7 @@ export function SkillGraphCanvas({
                   <text
                     x={45}
                     y={14}
-                    fill="#64748b"
+                    fill="#9ca3af"
                     fontSize="10"
                     fontWeight="500"
                     fontFamily="system-ui, sans-serif"
@@ -656,7 +656,7 @@ export function SkillGraphCanvas({
                   <text
                     x={NODE_WIDTH - 24}
                     y={14}
-                    fill="#94a3b8"
+                    fill="#6b7280"
                     fontSize="9.5"
                     fontWeight="600"
                     fontFamily="monospace"
@@ -669,16 +669,16 @@ export function SkillGraphCanvas({
                 {/* Contextual relationship tag banner */}
                 {isAncestor && (
                   <g transform={`translate(${NODE_WIDTH - 76}, -9)`}>
-                    <rect x={0} y={0} width={72} height={16} rx={4} fill="#ecfdf5" stroke="#10b981" strokeWidth="0.8" />
-                    <text x={36} y={11} fill="#047857" fontSize="8.5" fontWeight="700" textAnchor="middle">
+                    <rect x={0} y={0} width={72} height={16} rx={4} fill="#00b8a320" stroke="#00b8a3" strokeWidth="0.8" />
+                    <text x={36} y={11} fill="#00b8a3" fontSize="8.5" fontWeight="700" textAnchor="middle">
                       PREREQUISITE
                     </text>
                   </g>
                 )}
                 {isDescendant && (
                   <g transform={`translate(${NODE_WIDTH - 64}, -9)`}>
-                    <rect x={0} y={0} width={60} height={16} rx={4} fill="#eef2ff" stroke="#6366f1" strokeWidth="0.8" />
-                    <text x={30} y={11} fill="#4338ca" fontSize="8.5" fontWeight="700" textAnchor="middle">
+                    <rect x={0} y={0} width={60} height={16} rx={4} fill="#ffa11620" stroke="#ffa116" strokeWidth="0.8" />
+                    <text x={30} y={11} fill="#ffa116" fontSize="8.5" fontWeight="700" textAnchor="middle">
                       UNLOCKED
                     </text>
                   </g>

@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { createPortal } from 'react-dom';
 import { Lock, X, ChevronRight, UserPlus, ArrowLeft, Loader2, ShieldCheck, Terminal } from 'lucide-react';
 import { useAuth } from '@/features/auth/AuthContext';
 import { UserRole } from '@/types/auth';
@@ -141,16 +142,16 @@ export function GoogleOAuthModal({
     });
   };
 
-  return (
+  const modalContent = (
     <div
       role="dialog"
       aria-modal="true"
-      className="fixed inset-0 z-50 overflow-y-auto bg-slate-900/65 backdrop-blur-xs flex justify-center items-center p-3 sm:p-4 animate-in fade-in duration-150 font-sans"
+      className="fixed inset-0 z-[10000] overflow-y-auto bg-slate-950/75 backdrop-blur-xs flex min-h-screen items-center justify-center p-3 sm:p-4 animate-in fade-in duration-150 font-sans"
       onClick={onClose}
     >
       {/* Google Pop-up Window Container */}
       <div
-        className="relative w-full max-w-[460px] rounded-2xl border border-slate-200 bg-white shadow-2xl overflow-hidden animate-in zoom-in-95 duration-150 text-slate-900"
+        className="relative w-full max-w-[460px] my-auto rounded-2xl border border-slate-200 bg-white shadow-2xl overflow-hidden animate-in zoom-in-95 duration-150 text-slate-900 max-h-[92vh] overflow-y-auto"
         onClick={(e) => e.stopPropagation()}
       >
         {/* Browser Popup Window Top Bar */}
@@ -370,4 +371,8 @@ export function GoogleOAuthModal({
       </div>
     </div>
   );
+
+  return typeof document !== 'undefined'
+    ? createPortal(modalContent, document.body)
+    : modalContent;
 }

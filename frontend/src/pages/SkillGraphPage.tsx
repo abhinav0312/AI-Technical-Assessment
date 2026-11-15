@@ -72,12 +72,12 @@ export function SkillGraphPage() {
     return (
       <div className="flex flex-col items-center justify-center min-h-[calc(100vh-80px)] space-y-4">
         <div className="relative">
-          <div className="h-12 w-12 rounded-full border-4 border-brand-500/20 border-t-brand-500 animate-spin" />
-          <GitFork className="h-5 w-5 text-brand-400 absolute inset-0 m-auto" />
+          <div className="h-12 w-12 rounded-full border-4 border-[#ffa116]/20 border-t-[#ffa116] animate-spin" />
+          <GitFork className="h-5 w-5 text-[#ffa116] absolute inset-0 m-auto" />
         </div>
         <div className="text-center space-y-1">
-          <h3 className="text-sm font-bold text-slate-900">Synthesizing Skill Progress Map</h3>
-          <p className="text-xs text-slate-500">
+          <h3 className="text-sm font-bold text-[#ffffff]">Synthesizing Skill Progress Map</h3>
+          <p className="text-xs text-[#9ca3af]">
             Correlating verified evidence across Coding Arena, BugHunter, and diagnostic assessments...
           </p>
         </div>
@@ -93,26 +93,26 @@ export function SkillGraphPage() {
       error?.toLowerCase().includes('401');
 
     return (
-      <div className="p-8 max-w-xl mx-auto my-12 bg-white border border-slate-200 rounded-2xl text-center space-y-4 shadow-sm">
+      <div className="p-8 max-w-xl mx-auto my-12 bg-[#262626] border border-[#383838] rounded-2xl text-center space-y-4 shadow-sm text-[#eff2f6]">
         {isAuthError ? (
           <>
-            <div className="h-12 w-12 rounded-2xl bg-brand-50 border border-brand-200 text-brand-600 flex items-center justify-center mx-auto">
+            <div className="h-12 w-12 rounded-2xl bg-[#ffa116]/10 border border-[#ffa116]/30 text-[#ffa116] flex items-center justify-center mx-auto">
               <GitFork className="h-6 w-6" />
             </div>
-            <h3 className="text-lg font-bold text-slate-900">Sign In to Access Your SkillGraph</h3>
-            <p className="text-xs text-slate-500 max-w-sm mx-auto">
+            <h3 className="text-lg font-bold text-[#ffffff]">Sign In to Access Your SkillGraph</h3>
+            <p className="text-xs text-[#cbd5e1] max-w-sm mx-auto">
               Your verified skill graph and evidence traces are personalized to your assessments and code history.
             </p>
-            <Button onClick={() => (window.location.href = '/login')} className="gap-2">
+            <Button onClick={() => (window.location.href = '/login')} className="gap-2 bg-[#ffa116] hover:bg-[#ffb43a] text-black font-bold">
               Sign In to Continue
             </Button>
           </>
         ) : (
           <>
-            <AlertTriangle className="h-10 w-10 text-rose-500 mx-auto" />
-            <h3 className="text-lg font-bold text-slate-900">Error Loading Skill Progress</h3>
-            <p className="text-xs text-slate-500">{error || 'An unexpected error occurred.'}</p>
-            <Button onClick={fetchGraphData} className="gap-2">
+            <AlertTriangle className="h-10 w-10 text-[#ff375f] mx-auto" />
+            <h3 className="text-lg font-bold text-[#ffffff]">Error Loading Skill Progress</h3>
+            <p className="text-xs text-[#9ca3af]">{error || 'An unexpected error occurred.'}</p>
+            <Button onClick={fetchGraphData} className="gap-2 bg-[#ffa116] hover:bg-[#ffb43a] text-black font-bold">
               <RotateCw className="h-4 w-4" /> Retry Loading
             </Button>
           </>
@@ -124,24 +124,24 @@ export function SkillGraphPage() {
   const { summary, domains, nodes, edges, version } = graphData;
 
   return (
-    <div className="flex flex-col h-[calc(100vh-70px)] -m-6 overflow-hidden bg-[#FAFAFC]">
+    <div className="flex flex-col h-[calc(100vh-70px)] -m-6 overflow-hidden bg-[#1a1a1a]">
       {/* Top Header & Metrics Dashboard */}
-      <div className="border-b border-slate-200 bg-white px-6 py-4 shrink-0 space-y-3.5 shadow-xs">
+      <div className="border-b border-[#383838] bg-[#262626] px-6 py-4 shrink-0 space-y-3.5 shadow-sm">
         {/* Title row */}
         <div className="flex flex-wrap items-center justify-between gap-4">
           <div className="flex items-center gap-3">
-            <div className="h-9 w-9 rounded-xl bg-brand-600 flex items-center justify-center shadow-xs">
-              <GitFork className="h-5 w-5 text-white" />
+            <div className="h-9 w-9 rounded-xl bg-[#ffa116] text-black flex items-center justify-center shadow-xs">
+              <GitFork className="h-5 w-5" />
             </div>
             <div>
               <div className="flex items-center gap-2">
-                <h1 className="text-lg font-bold text-slate-900 tracking-tight">Skill Progress Map</h1>
-                <span className="text-[10px] font-mono font-semibold px-2 py-0.5 rounded-full bg-brand-50 text-brand-700 border border-brand-200">
+                <h1 className="text-lg font-bold text-[#ffffff] tracking-tight">Skill Progress Map</h1>
+                <span className="text-[10px] font-mono font-semibold px-2 py-0.5 rounded-full bg-[#ffa116]/10 text-[#ffa116] border border-[#ffa116]/30">
                   Taxonomy v{version}
                 </span>
-                <span className="text-[10px] text-slate-400 font-medium">· Verified Evidence</span>
+                <span className="text-[10px] text-[#9ca3af] font-medium">· Verified Evidence</span>
               </div>
-              <p className="text-xs text-slate-500">
+              <p className="text-xs text-[#cbd5e1]">
                 Hierarchical proficiency map synthesizing verified code execution and diagnostic sessions.
               </p>
             </div>
@@ -153,7 +153,7 @@ export function SkillGraphPage() {
               variant="outline"
               size="sm"
               onClick={fetchGraphData}
-              className="h-8 gap-1.5 text-xs text-slate-700 hover:text-slate-900 border-slate-200"
+              className="h-8 gap-1.5 text-xs text-[#eff2f6] hover:text-[#ffa116] border-[#383838] bg-[#1e1e1e] hover:bg-[#2e2e2e]"
             >
               <RotateCw className="h-3.5 w-3.5" /> Refresh Evidence
             </Button>
@@ -163,76 +163,76 @@ export function SkillGraphPage() {
         {/* Summary Stat Cards */}
         <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-2.5 pt-1">
           {/* Total Skills */}
-          <div className="p-3 rounded-2xl bg-slate-50/70 border border-slate-200 flex items-center gap-3">
-            <div className="p-2 rounded-lg bg-indigo-50 text-brand-600">
+          <div className="p-3 rounded-2xl bg-[#1e1e1e] border border-[#383838] flex items-center gap-3">
+            <div className="p-2 rounded-lg bg-[#ffa116]/10 text-[#ffa116]">
               <Layers className="h-4 w-4" />
             </div>
             <div>
-              <span className="text-[10px] text-slate-500 block font-semibold">Total Skills</span>
-              <span className="text-sm font-bold text-slate-900 font-mono">{summary.total_skills}</span>
+              <span className="text-[10px] text-[#9ca3af] block font-semibold">Total Skills</span>
+              <span className="text-sm font-bold text-[#ffffff] font-mono">{summary.total_skills}</span>
             </div>
           </div>
 
           {/* Mastered */}
-          <div className="p-3 rounded-2xl bg-slate-50/70 border border-slate-200 flex items-center gap-3">
-            <div className="p-2 rounded-lg bg-emerald-50 text-emerald-600">
+          <div className="p-3 rounded-2xl bg-[#1e1e1e] border border-[#383838] flex items-center gap-3">
+            <div className="p-2 rounded-lg bg-[#00b8a3]/10 text-[#00b8a3]">
               <CheckCircle2 className="h-4 w-4" />
             </div>
             <div>
-              <span className="text-[10px] text-slate-500 block font-semibold">Mastered (≥3 obs)</span>
-              <span className="text-sm font-bold text-emerald-700 font-mono">
+              <span className="text-[10px] text-[#9ca3af] block font-semibold">Mastered (≥3 obs)</span>
+              <span className="text-sm font-bold text-[#00b8a3] font-mono">
                 {summary.mastered_count}
               </span>
             </div>
           </div>
 
           {/* Proficient */}
-          <div className="p-3 rounded-2xl bg-slate-50/70 border border-slate-200 flex items-center gap-3">
-            <div className="p-2 rounded-lg bg-cyan-50 text-cyan-600">
+          <div className="p-3 rounded-2xl bg-[#1e1e1e] border border-[#383838] flex items-center gap-3">
+            <div className="p-2 rounded-lg bg-sky-500/10 text-sky-400">
               <ShieldCheck className="h-4 w-4" />
             </div>
             <div>
-              <span className="text-[10px] text-slate-500 block font-semibold">Proficient</span>
-              <span className="text-sm font-bold text-cyan-700 font-mono">
+              <span className="text-[10px] text-[#9ca3af] block font-semibold">Proficient</span>
+              <span className="text-sm font-bold text-sky-400 font-mono">
                 {summary.proficient_count}
               </span>
             </div>
           </div>
 
           {/* Developing */}
-          <div className="p-3 rounded-2xl bg-slate-50/70 border border-slate-200 flex items-center gap-3">
-            <div className="p-2 rounded-lg bg-amber-50 text-amber-600">
+          <div className="p-3 rounded-2xl bg-[#1e1e1e] border border-[#383838] flex items-center gap-3">
+            <div className="p-2 rounded-lg bg-[#ffa116]/10 text-[#ffa116]">
               <AlertTriangle className="h-4 w-4" />
             </div>
             <div>
-              <span className="text-[10px] text-slate-500 block font-semibold">Developing</span>
-              <span className="text-sm font-bold text-amber-700 font-mono">
+              <span className="text-[10px] text-[#9ca3af] block font-semibold">Developing</span>
+              <span className="text-sm font-bold text-[#ffa116] font-mono">
                 {summary.developing_count}
               </span>
             </div>
           </div>
 
           {/* Unassessed */}
-          <div className="p-3 rounded-2xl bg-slate-50/70 border border-slate-200 flex items-center gap-3">
-            <div className="p-2 rounded-lg bg-slate-100 text-slate-500">
+          <div className="p-3 rounded-2xl bg-[#1e1e1e] border border-[#383838] flex items-center gap-3">
+            <div className="p-2 rounded-lg bg-[#262626] text-[#9ca3af]">
               <HelpCircle className="h-4 w-4" />
             </div>
             <div>
-              <span className="text-[10px] text-slate-500 block font-semibold">Unassessed</span>
-              <span className="text-sm font-bold text-slate-700 font-mono">
+              <span className="text-[10px] text-[#9ca3af] block font-semibold">Unassessed</span>
+              <span className="text-sm font-bold text-[#9ca3af] font-mono">
                 {summary.unassessed_count}
               </span>
             </div>
           </div>
 
           {/* Overall Proficiency */}
-          <div className="p-3 rounded-2xl bg-slate-50/70 border border-slate-200 flex items-center gap-3">
-            <div className="p-2 rounded-lg bg-brand-50 text-brand-600">
+          <div className="p-3 rounded-2xl bg-[#1e1e1e] border border-[#383838] flex items-center gap-3">
+            <div className="p-2 rounded-lg bg-[#ffa116]/10 text-[#ffa116]">
               <Percent className="h-4 w-4" />
             </div>
             <div>
-              <span className="text-[10px] text-slate-500 block font-semibold">Avg Proficiency</span>
-              <span className="text-sm font-bold text-brand-700 font-mono">
+              <span className="text-[10px] text-[#9ca3af] block font-semibold">Avg Proficiency</span>
+              <span className="text-sm font-bold text-[#ffa116] font-mono">
                 {Math.round(
                   summary.overall_proficiency <= 1.0 && summary.overall_proficiency > 0
                     ? summary.overall_proficiency * 100
@@ -247,15 +247,15 @@ export function SkillGraphPage() {
         <div className="flex flex-wrap items-center justify-between gap-3 pt-1 text-xs">
           {/* Domain Pills */}
           <div className="flex items-center gap-1.5 overflow-x-auto no-scrollbar py-0.5">
-            <span className="text-[10px] font-bold uppercase tracking-wider text-slate-500 mr-1">
+            <span className="text-[10px] font-bold uppercase tracking-wider text-[#9ca3af] mr-1">
               Domain:
             </span>
             <button
               onClick={() => setDomainFilter('all')}
               className={`px-3 py-1 rounded-lg text-xs font-semibold transition-all ${
                 domainFilter === 'all'
-                  ? 'bg-brand-600 text-white shadow-xs'
-                  : 'bg-slate-100 text-slate-600 hover:text-slate-900 hover:bg-slate-200'
+                  ? 'bg-[#ffa116] text-black shadow-xs font-bold'
+                  : 'bg-[#1e1e1e] text-[#cbd5e1] hover:text-[#ffffff] hover:bg-[#2e2e2e] border border-[#383838]'
               }`}
             >
               All ({summary.total_skills})
@@ -266,8 +266,8 @@ export function SkillGraphPage() {
                 onClick={() => setDomainFilter(d.key)}
                 className={`px-3 py-1 rounded-lg text-xs font-semibold whitespace-nowrap transition-all ${
                   domainFilter === d.key
-                    ? 'bg-brand-600 text-white shadow-xs'
-                    : 'bg-slate-100 text-slate-600 hover:text-slate-900 hover:bg-slate-200'
+                    ? 'bg-[#ffa116] text-black shadow-xs font-bold'
+                    : 'bg-[#1e1e1e] text-[#cbd5e1] hover:text-[#ffffff] hover:bg-[#2e2e2e] border border-[#383838]'
                 }`}
               >
                 {d.label} ({d.count})
@@ -278,15 +278,15 @@ export function SkillGraphPage() {
           {/* Mastery Status Pills & Search */}
           <div className="flex items-center gap-3 ml-auto">
             {/* Status filters */}
-            <div className="flex items-center gap-1 bg-slate-100 p-0.5 rounded-lg border border-slate-200">
+            <div className="flex items-center gap-1 bg-[#1e1e1e] p-0.5 rounded-lg border border-[#383838]">
               {(['all', 'mastered', 'proficient', 'developing', 'unassessed'] as const).map((lvl) => (
                 <button
                   key={lvl}
                   onClick={() => setMasteryFilter(lvl)}
                   className={`px-2.5 py-1 rounded-md text-[11px] capitalize font-medium transition-all ${
                     masteryFilter === lvl
-                      ? 'bg-white text-brand-700 shadow-2xs font-semibold'
-                      : 'text-slate-600 hover:text-slate-900'
+                      ? 'bg-[#ffa116] text-black shadow-xs font-bold'
+                      : 'text-[#cbd5e1] hover:text-[#ffffff]'
                   }`}
                 >
                   {lvl}
@@ -296,13 +296,13 @@ export function SkillGraphPage() {
 
             {/* Search Input */}
             <div className="relative w-48">
-              <Search className="h-3.5 w-3.5 text-slate-400 absolute left-2.5 top-2.5" />
+              <Search className="h-3.5 w-3.5 text-[#9ca3af] absolute left-2.5 top-2.5" />
               <input
                 type="text"
                 placeholder="Find skill..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="w-full h-8 pl-8 pr-3 text-xs rounded-lg bg-slate-50 border border-slate-200 text-slate-900 placeholder:text-slate-400 focus:bg-white focus:outline-none focus:border-brand-500 font-medium"
+                className="w-full h-8 pl-8 pr-3 text-xs rounded-lg bg-[#1e1e1e] border border-[#383838] text-[#ffffff] placeholder:text-[#9ca3af] focus:outline-none focus:border-[#ffa116] font-medium"
               />
             </div>
           </div>

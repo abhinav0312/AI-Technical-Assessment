@@ -11,6 +11,9 @@ from app.api.v1.endpoints import (
     bughunter,
     devsim,
     skillgraph,
+    interview,
+    contests,
+    admin,
 )
 
 api_router = APIRouter()
@@ -26,3 +29,6 @@ api_router.include_router(skillgraph.router, prefix="/skillgraph", tags=["SkillG
 api_router.include_router(bughunter.router, prefix="/bughunter", tags=["BugHunter Debugging Assessment"])
 api_router.include_router(devsim.router, prefix="/devsim", tags=["DevSim Engineering Scenarios"])
 api_router.include_router(dashboard.router, prefix="/dashboard", tags=["Dashboard Intelligence"])
+api_router.include_router(interview.router, prefix="/interview", tags=["InterviewX Conversational AI"])
+api_router.include_router(contests.router, prefix="/contests", tags=["Contests & Live Leaderboard"])
+api_router.include_router(admin.router, prefix="/admin", tags=["Admin CMS & Problem Studio"])

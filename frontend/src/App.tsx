@@ -20,6 +20,10 @@ import { BugHunterArena } from '@/pages/BugHunterArena';
 import { DevSimPage } from '@/pages/DevSimPage';
 import { DevSimWorkspace } from '@/pages/DevSimWorkspace';
 import { SkillGraphPage } from '@/pages/SkillGraphPage';
+import { InterviewArena } from '@/pages/InterviewArena';
+import { ContestsPage } from '@/pages/ContestsPage';
+import { AdminPage } from '@/pages/AdminPage';
+import { DevArcadePage } from '@/pages/DevArcadePage';
 import { NotFoundPage } from '@/pages/NotFoundPage';
 
 export function App() {
@@ -31,6 +35,15 @@ export function App() {
       <Route path="/register" element={<RegisterPage />} />
       <Route path="/challenges" element={<ChallengesPage />} />
       <Route path="/challenges/:slug" element={<CodingArena />} />
+      <Route path="/contests" element={<ContestsPage />} />
+      <Route
+        path="/interview"
+        element={
+          <ProtectedRoute>
+            <InterviewArena />
+          </ProtectedRoute>
+        }
+      />
       <Route
         path="/skillgraph"
         element={
@@ -43,6 +56,7 @@ export function App() {
       <Route path="/bughunter/:slug" element={<BugHunterArena />} />
       <Route path="/devsim" element={<DevSimPage />} />
       <Route path="/devsim/:slug" element={<DevSimWorkspace />} />
+      <Route path="/arcade" element={<DevArcadePage />} />
       <Route path="/features" element={<FeaturesPage />} />
 
       {/* Protected Dashboard Routes */}
@@ -57,12 +71,15 @@ export function App() {
         <Route index element={<DashboardOverview />} />
         <Route path="arena" element={<CodingArena />} />
         <Route path="arena/:slug" element={<CodingArena />} />
+        <Route path="interview" element={<InterviewArena />} />
+        <Route path="contests" element={<ContestsPage />} />
         <Route path="skillgraph" element={<SkillGraphPage />} />
         <Route path="codetwin" element={<CodeTwinDashboard />} />
         <Route path="bughunter" element={<BugHunterPage />} />
         <Route path="bughunter/:slug" element={<BugHunterArena />} />
         <Route path="devsim" element={<DevSimPage />} />
         <Route path="devsim/:slug" element={<DevSimWorkspace />} />
+        <Route path="arcade" element={<DevArcadePage />} />
         <Route path="submissions" element={<SubmissionsPage />} />
         <Route path="assessments" element={<AssessmentsPage />} />
         <Route path="analytics" element={<AnalyticsPage />} />
@@ -70,6 +87,7 @@ export function App() {
         <Route path="activity" element={<SubmissionsPage />} />
         <Route path="profile" element={<ProfilePage />} />
         <Route path="settings" element={<SettingsPage />} />
+        <Route path="admin" element={<AdminPage />} />
       </Route>
 
       {/* Fallback */}

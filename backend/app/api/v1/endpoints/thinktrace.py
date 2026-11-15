@@ -23,6 +23,11 @@ router = APIRouter()
 
 
 def sanitize_report_response(report, current_user: User) -> ThinkTraceReportResponse:
+    token_usage_dict = report.token_usage or {}
+    report_tier = token_usage_dict.get("tier") or ("flash_lite" if "lite" in (report.ai_model or "").lower() else "flash_pro")
+    diag_metrics = token_usage_dict.get("diagnostic_metrics")
+    latency = token_usage_dict.get("latency_ms")
+
     return ThinkTraceReportResponse(
         id=report.id,
         reasoning_record_id=report.reasoning_record_id,
@@ -56,10 +61,13 @@ def sanitize_report_response(report, current_user: User) -> ThinkTraceReportResp
         prompt_version=report.prompt_version,
         ai_provider=report.ai_provider,
         ai_model=report.ai_model,
+        tier=report_tier,
         is_fallback=report.is_fallback,
         confidence_score=report.confidence_score,
         confidence_level=report.confidence_level,
-        token_usage=report.token_usage,
+        token_usage=token_usage_dict,
+        diagnostic_metrics=diag_metrics,
+        latency_ms=latency,
         human_reviewed=report.human_reviewed,
         human_reviewer_name=None,
         human_score_override=report.human_score_override,
@@ -246,9 +254,11 @@ async def evaluate_reasoning_and_solution(
         code_execution_status=code_status,
         passed_tests=passed_tests,
         total_tests=total_tests,
+        language=req.language or "python",
+        tier=req.tier or "flash_pro",
     )
 
-    ai_result = await thinktrace_service.evaluate_reasoning(eval_input)
+    ai_result = await thinktrace_service.evaluate_reasoning(eval_input, tier=req.tier or "flash_pro")
     ai_out = ai_result.evaluation
 
     # 4. Construct and Save ThinkTraceReport
@@ -291,7 +301,12 @@ async def evaluate_reasoning_and_solution(
         "is_fallback": ai_result.is_fallback,
         "confidence_score": ai_out.confidence_score,
         "confidence_level": ai_out.confidence_level,
-        "token_usage": ai_result.token_usage,
+        "token_usage": {
+            **ai_result.token_usage,
+            "diagnostic_metrics": ai_result.diagnostic_metrics,
+            "latency_ms": ai_result.latency_ms,
+            "tier": ai_result.tier,
+        },
     }
 
     report = await tt_repo.save_report(report_dict)

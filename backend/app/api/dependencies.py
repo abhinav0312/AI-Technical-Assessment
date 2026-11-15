@@ -59,6 +59,25 @@ async def get_current_user(
     return user
 
 
+async def get_optional_current_user(
+    token: Optional[str] = Depends(get_token_from_request),
+    db: AsyncSession = Depends(get_db),
+) -> Optional[User]:
+    if not token:
+        return None
+    payload = decode_access_token(token)
+    if not payload:
+        return None
+    user_id: Optional[str] = payload.get("sub")
+    if not user_id:
+        return None
+    user_repo = UserRepository(db)
+    user = await user_repo.get_by_id(user_id)
+    if not user or user.account_status != "active":
+        return None
+    return user
+
+
 async def get_current_active_user(
     current_user: User = Depends(get_current_user),
 ) -> User:

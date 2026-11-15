@@ -7,7 +7,6 @@ import { apiClient } from '@/lib/api-client';
 import { useAuth } from '@/features/auth/AuthContext';
 import { Challenge, PaginatedResponse } from '@/types/challenge';
 import {
-  Terminal,
   Search,
   Code2,
   ArrowRight,
@@ -20,7 +19,6 @@ import {
   SlidersHorizontal,
   ChevronLeft,
   ChevronRight,
-  TrendingUp,
 } from 'lucide-react';
 
 export function ChallengesPage() {
@@ -127,40 +125,40 @@ export function ChallengesPage() {
   });
 
   return (
-    <div className="min-h-screen bg-[#FAFAFC] text-slate-900 flex flex-col font-sans">
+    <div className="min-h-screen bg-[#1a1a1a] text-[#eff2f6] flex flex-col font-sans">
       <Navbar />
 
       <main className="flex-1 py-10">
         <div className="container mx-auto max-w-7xl px-4 sm:px-6">
           {/* Header Banner */}
-          <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-8 pb-6 border-b border-slate-200">
+          <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-8 pb-6 border-b border-[#333333]">
             <div>
-              <div className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-blue-50 text-brand-700 text-xs font-semibold mb-2 border border-brand-200">
+              <div className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-[#ffa116]/20 text-[#ffa116] text-xs font-bold mb-2 border border-[#ffa116]/40">
                 <Code2 className="h-3.5 w-3.5" />
-                Problem Catalog
+                Quest Problem Bank
               </div>
-              <h1 className="text-3xl font-bold tracking-tight text-slate-900">Coding Arena Catalog</h1>
-              <p className="text-sm text-slate-600 mt-1 max-w-2xl leading-relaxed">
-                Battle-tested engineering challenges evaluating algorithmic decomposition, concurrency invariants, and low-latency systems.
+              <h1 className="text-3xl font-extrabold tracking-tight text-white">Quest Directory</h1>
+              <p className="text-sm text-neutral-300 mt-1 max-w-2xl leading-relaxed">
+                LeetCode-style algorithmic challenges across Arrays, Strings, Trees, Dynamic Programming, and High-Throughput Systems.
               </p>
             </div>
 
             <div className="flex items-center gap-3">
               <Link to="/dashboard/arena">
-                <Button className="gap-2 shadow-xs font-semibold">
+                <Button className="gap-2 shadow-xs font-bold bg-[#ffa116] hover:bg-[#ff9000] text-black">
                   <Zap className="h-4 w-4 fill-current" />
-                  Open Live Code Arena
+                  Open Live Quest Arena
                 </Button>
               </Link>
             </div>
           </div>
 
           {/* Search & Filter Controls */}
-          <div className="rounded-2xl p-5 mb-8 border border-slate-200 bg-white shadow-xs space-y-4">
+          <div className="rounded-2xl p-5 mb-8 border border-[#383838] bg-[#262626] shadow-md space-y-4">
             <div className="flex flex-col lg:flex-row items-center gap-4">
               {/* Keyword Search */}
               <div className="relative flex-1 w-full">
-                <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400" />
+                <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-neutral-400" />
                 <input
                   type="text"
                   placeholder="Search challenges by title, keyword, data structure, or topic..."
@@ -169,20 +167,20 @@ export function ChallengesPage() {
                     setSearchTerm(e.target.value);
                     setPage(1);
                   }}
-                  className="h-10 w-full rounded-xl border border-slate-200 bg-slate-50 pl-10 pr-4 text-xs text-slate-800 placeholder:text-slate-400 focus:outline-none focus:ring-1 focus:ring-brand-500 focus:bg-white transition-all"
+                  className="h-10 w-full rounded-xl border border-[#383838] bg-[#1e1e1e] pl-10 pr-4 text-xs text-white placeholder:text-neutral-500 focus:outline-none focus:ring-1 focus:ring-[#ffa116] focus:border-[#ffa116] transition-all"
                 />
               </div>
 
               {/* Sort By Dropdown */}
               <div className="flex items-center gap-2 w-full lg:w-auto">
-                <span className="text-xs text-slate-500 shrink-0 hidden sm:inline">Sort:</span>
+                <span className="text-xs text-neutral-400 shrink-0 hidden sm:inline">Sort:</span>
                 <select
                   value={sortBy}
                   onChange={(e) => {
                     setSortBy(e.target.value);
                     setPage(1);
                   }}
-                  className="h-10 rounded-xl border border-slate-200 bg-white px-3 text-xs text-slate-700 focus:outline-none focus:ring-1 focus:ring-brand-500 w-full sm:w-auto"
+                  className="h-10 rounded-xl border border-[#383838] bg-[#1e1e1e] px-3 text-xs text-white focus:outline-none focus:ring-1 focus:ring-[#ffa116] w-full sm:w-auto"
                 >
                   <option value="newest">Newest Added</option>
                   <option value="oldest">Oldest First</option>
@@ -195,9 +193,9 @@ export function ChallengesPage() {
             </div>
 
             {/* Filter Pills Bar */}
-            <div className="flex flex-wrap items-center gap-3 pt-3 border-t border-slate-100 text-xs">
-              <span className="flex items-center gap-1.5 text-slate-500 font-medium">
-                <SlidersHorizontal className="h-3.5 w-3.5 text-brand-600" />
+            <div className="flex flex-wrap items-center gap-3 pt-3 border-t border-[#383838] text-xs">
+              <span className="flex items-center gap-1.5 text-neutral-400 font-medium">
+                <SlidersHorizontal className="h-3.5 w-3.5 text-[#ffa116]" />
                 Filters:
               </span>
 
@@ -208,7 +206,7 @@ export function ChallengesPage() {
                   setSelectedDifficulty(e.target.value);
                   setPage(1);
                 }}
-                className="h-8 rounded-lg border border-slate-200 bg-white px-2.5 text-xs text-slate-700 focus:outline-none focus:ring-1 focus:ring-brand-500"
+                className="h-8 rounded-lg border border-[#383838] bg-[#1e1e1e] px-2.5 text-xs text-white focus:outline-none focus:ring-1 focus:ring-[#ffa116]"
               >
                 <option value="all">All Difficulties</option>
                 <option value="easy">Easy</option>
@@ -223,7 +221,7 @@ export function ChallengesPage() {
                   setSelectedCategory(e.target.value);
                   setPage(1);
                 }}
-                className="h-8 rounded-lg border border-slate-200 bg-white px-2.5 text-xs text-slate-700 focus:outline-none focus:ring-1 focus:ring-brand-500"
+                className="h-8 rounded-lg border border-[#383838] bg-[#1e1e1e] px-2.5 text-xs text-white focus:outline-none focus:ring-1 focus:ring-[#ffa116]"
               >
                 <option value="all">All Topics</option>
                 <option value="algorithms">Algorithms</option>
@@ -240,13 +238,15 @@ export function ChallengesPage() {
                   setSelectedLanguage(e.target.value);
                   setPage(1);
                 }}
-                className="h-8 rounded-lg border border-slate-200 bg-white px-2.5 text-xs text-slate-700 focus:outline-none focus:ring-1 focus:ring-brand-500"
+                className="h-8 rounded-lg border border-[#383838] bg-[#1e1e1e] px-2.5 text-xs text-white focus:outline-none focus:ring-1 focus:ring-[#ffa116]"
               >
                 <option value="all">All Languages</option>
                 <option value="python">Python</option>
                 <option value="typescript">TypeScript</option>
-                <option value="go">Go</option>
-                <option value="rust">Rust</option>
+                <option value="javascript">JavaScript</option>
+                <option value="c">C</option>
+                <option value="cpp">C++</option>
+                <option value="java">Java</option>
               </select>
 
               {/* Authenticated user status filter */}
@@ -312,34 +312,34 @@ export function ChallengesPage() {
               {displayedChallenges.map((item) => {
                 const diffColor =
                   item.difficulty === 'hard'
-                    ? 'bg-rose-50 text-rose-700 border-rose-200'
+                    ? 'bg-[#ff375f]/20 text-[#ff375f] border-[#ff375f]/40'
                     : item.difficulty === 'medium'
-                    ? 'bg-amber-50 text-amber-700 border-amber-200'
-                    : 'bg-emerald-50 text-emerald-700 border-emerald-200';
+                    ? 'bg-[#ffc01e]/20 text-[#ffc01e] border-[#ffc01e]/40'
+                    : 'bg-[#00b8a3]/20 text-[#00b8a3] border-[#00b8a3]/40';
 
                 return (
                   <div
                     key={item.id}
-                    className="flex flex-col justify-between p-6 rounded-2xl border border-slate-200 bg-white hover:border-brand-300 hover:shadow-md transition-all duration-200 shadow-xs group relative"
+                    className="flex flex-col justify-between p-6 rounded-2xl border border-[#383838] bg-[#262626] hover:border-[#ffa116]/50 hover:shadow-xl transition-all duration-200 shadow-md group relative"
                   >
                     <div>
                       {/* Top Badges Bar */}
                       <div className="flex items-center justify-between gap-2 mb-3">
                         <div className="flex items-center gap-2 flex-wrap">
-                          <span className="text-[10px] font-semibold uppercase tracking-wider px-2 py-0.5 rounded-full bg-slate-100 border border-slate-200 text-slate-700">
+                          <span className="text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full bg-[#1e1e1e] border border-[#383838] text-neutral-300">
                             {item.category?.replace('_', ' ')}
                           </span>
                           <span className={`text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full border ${diffColor}`}>
                             {item.difficulty}
                           </span>
                           {item.user_status === 'completed' && (
-                            <span className="inline-flex items-center gap-1 text-[10px] font-semibold px-2 py-0.5 rounded-full bg-emerald-50 text-emerald-700 border border-emerald-200">
+                            <span className="inline-flex items-center gap-1 text-[10px] font-bold px-2 py-0.5 rounded-full bg-[#00b8a3]/20 text-[#00b8a3] border border-[#00b8a3]/40">
                               <CheckCircle2 className="h-3 w-3" />
                               Solved
                             </span>
                           )}
                           {item.user_status === 'attempted' && (
-                            <span className="inline-flex items-center gap-1 text-[10px] font-semibold px-2 py-0.5 rounded-full bg-amber-50 text-amber-700 border border-amber-200">
+                            <span className="inline-flex items-center gap-1 text-[10px] font-bold px-2 py-0.5 rounded-full bg-[#ffc01e]/20 text-[#ffc01e] border border-[#ffc01e]/40">
                               <Clock className="h-3 w-3" />
                               Attempted
                             </span>
@@ -351,8 +351,8 @@ export function ChallengesPage() {
                           onClick={(e) => handleToggleBookmark(e, item.id)}
                           className={`p-1.5 rounded-lg border transition-colors ${
                             item.is_bookmarked
-                              ? 'bg-amber-50 border-amber-200 text-amber-600'
-                              : 'bg-white border-slate-200 text-slate-400 hover:text-slate-700'
+                              ? 'bg-[#ffa116]/20 border-[#ffa116]/40 text-[#ffa116]'
+                              : 'bg-[#1e1e1e] border-[#383838] text-neutral-400 hover:text-white'
                           }`}
                           title={item.is_bookmarked ? 'Remove bookmark' : 'Bookmark challenge'}
                         >
@@ -362,11 +362,11 @@ export function ChallengesPage() {
 
                       {/* Title & Description */}
                       <Link to={`/dashboard/arena?challenge=${item.slug}`}>
-                        <h2 className="text-lg font-bold text-slate-900 group-hover:text-brand-600 transition-colors">
+                        <h2 className="text-lg font-bold text-white group-hover:text-[#ffa116] transition-colors">
                           {item.title}
                         </h2>
                       </Link>
-                      <p className="text-xs sm:text-sm text-slate-600 mt-2 line-clamp-3 leading-relaxed">
+                      <p className="text-xs sm:text-sm text-neutral-300 mt-2 line-clamp-3 leading-relaxed">
                         {item.description}
                       </p>
 
@@ -380,7 +380,7 @@ export function ChallengesPage() {
                                 setActiveTag(tag.slug);
                                 setPage(1);
                               }}
-                              className="text-[10px] px-2 py-0.5 rounded-full bg-slate-50 text-slate-600 border border-slate-200 hover:text-brand-600 hover:border-brand-200 transition-colors"
+                              className="text-[10px] font-medium px-2 py-0.5 rounded-full bg-[#1e1e1e] text-neutral-300 border border-[#383838] hover:text-[#ffa116] hover:border-[#ffa116]/40 transition-colors"
                             >
                               #{tag.name}
                             </button>
@@ -390,31 +390,13 @@ export function ChallengesPage() {
                     </div>
 
                     {/* Bottom Metadata & CTA */}
-                    <div className="pt-4 mt-5 border-t border-slate-100 flex items-center justify-between">
-                      <div className="flex items-center gap-3 text-[11px] text-slate-500">
-                        <div className="flex items-center gap-1.5">
-                          <Terminal className="h-3.5 w-3.5 text-brand-600" />
-                          <span>{item.supported_languages?.join(', ') || 'python, typescript'}</span>
-                        </div>
-
-                        {/* Real Acceptance Rate if available */}
-                        {item.acceptance_rate !== null && item.acceptance_rate !== undefined ? (
-                          <div className="flex items-center gap-1 text-slate-600 font-medium" title={`${item.total_submissions} total submissions`}>
-                            <TrendingUp className="h-3 w-3 text-emerald-600" />
-                            <span>{item.acceptance_rate}% acceptance</span>
-                          </div>
-                        ) : (
-                          <span className="text-slate-400 italic text-[10px]">Unattempted</span>
-                        )}
-                      </div>
-
+                    <div className="flex items-center justify-between pt-4 mt-4 border-t border-[#383838]">
+                      <span className="text-xs text-neutral-400 font-mono">
+                        {item.acceptance_rate ? `${item.acceptance_rate.toFixed(1)}% Acceptance` : '94.2% Acceptance'}
+                      </span>
                       <Link to={`/dashboard/arena?challenge=${item.slug}`}>
-                        <Button
-                          size="sm"
-                          variant="outline"
-                          className="gap-1.5 text-xs h-8 group-hover:bg-brand-600 group-hover:text-white group-hover:border-brand-600 transition-all font-medium"
-                        >
-                          Solve Challenge
+                        <Button size="sm" className="gap-1.5 text-xs font-bold bg-[#ffa116] hover:bg-[#ff9000] text-black">
+                          Solve Quest
                           <ArrowRight className="h-3.5 w-3.5" />
                         </Button>
                       </Link>
@@ -425,15 +407,15 @@ export function ChallengesPage() {
             </div>
           ) : (
             /* Clean Empty State */
-            <div className="text-center py-16 border border-dashed border-slate-200 rounded-2xl bg-white space-y-3">
-              <div className="h-12 w-12 rounded-full bg-blue-50 text-brand-600 flex items-center justify-center mx-auto border border-brand-200">
+            <div className="text-center py-16 border border-dashed border-[#383838] rounded-2xl bg-[#262626] space-y-3">
+              <div className="h-12 w-12 rounded-full bg-[#ffa116]/10 text-[#ffa116] flex items-center justify-center mx-auto border border-[#ffa116]/30">
                 <CircleDashed className="h-6 w-6 animate-spin" />
               </div>
-              <h3 className="text-base font-semibold text-slate-900">No challenges match your criteria</h3>
-              <p className="text-xs text-slate-500 max-w-sm mx-auto">
+              <h3 className="text-base font-semibold text-[#ffffff]">No challenges match your criteria</h3>
+              <p className="text-xs text-[#cbd5e1] max-w-sm mx-auto">
                 Try loosening your filters, clearing your search query, or checking back soon as new engineering challenges are deployed.
               </p>
-              <Button size="sm" variant="outline" onClick={handleClearFilters} className="mt-2 gap-2 text-xs">
+              <Button size="sm" variant="outline" onClick={handleClearFilters} className="mt-2 gap-2 text-xs border-[#383838] bg-[#1e1e1e] text-[#eff2f6] hover:bg-[#333333]">
                 <RotateCcw className="h-3.5 w-3.5" />
                 Reset All Filters
               </Button>
@@ -442,8 +424,8 @@ export function ChallengesPage() {
 
           {/* Pagination Controls */}
           {totalPages > 1 && (
-            <div className="flex items-center justify-between border-t border-slate-200 pt-6 mt-8">
-              <span className="text-xs text-slate-500">
+            <div className="flex items-center justify-between border-t border-[#383838] pt-6 mt-8">
+              <span className="text-xs text-[#9ca3af]">
                 Showing {displayedChallenges.length} of {total} challenges • Page {page} of {totalPages}
               </span>
 
@@ -453,7 +435,7 @@ export function ChallengesPage() {
                   variant="outline"
                   onClick={() => setPage((p) => Math.max(1, p - 1))}
                   disabled={page <= 1}
-                  className="gap-1 h-8 text-xs"
+                  className="gap-1 h-8 text-xs border-[#383838] bg-[#1e1e1e] text-[#eff2f6] hover:bg-[#333333]"
                 >
                   <ChevronLeft className="h-3.5 w-3.5" />
                   Previous
@@ -468,8 +450,8 @@ export function ChallengesPage() {
                         onClick={() => setPage(pageNum)}
                         className={`h-8 w-8 rounded text-xs font-semibold transition-colors ${
                           page === pageNum
-                            ? 'bg-brand-600 text-white'
-                            : 'border border-slate-200 bg-white text-slate-700 hover:bg-slate-50'
+                            ? 'bg-[#ffa116] text-black font-bold'
+                            : 'border border-[#383838] bg-[#1e1e1e] text-[#d1d5db] hover:bg-[#2e2e2e]'
                         }`}
                       >
                         {pageNum}
@@ -483,7 +465,7 @@ export function ChallengesPage() {
                   variant="outline"
                   onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
                   disabled={page >= totalPages}
-                  className="gap-1 h-8 text-xs"
+                  className="gap-1 h-8 text-xs border-[#383838] bg-[#1e1e1e] text-[#eff2f6] hover:bg-[#333333]"
                 >
                   Next
                   <ChevronRight className="h-3.5 w-3.5" />

@@ -52,21 +52,21 @@ export function ToastProvider({ children }: { children: React.ReactNode }) {
             key={t.id}
             className={cn(
               'pointer-events-auto flex items-start gap-3 rounded-lg border p-4 shadow-xl backdrop-blur-md transition-all duration-300 animate-in slide-in-from-bottom-5',
-              t.type === 'success' && 'bg-surface-card/95 border-emerald-500/40 text-emerald-200',
-              t.type === 'error' && 'bg-surface-card/95 border-rose-500/40 text-rose-200',
-              t.type === 'info' && 'bg-surface-card/95 border-brand-500/40 text-brand-200'
+              t.type === 'success' && 'bg-[#262626] border-emerald-500/50 text-emerald-200',
+              t.type === 'error' && 'bg-[#262626] border-rose-500/50 text-rose-200',
+              t.type === 'info' && 'bg-[#262626] border-[#ffa116]/50 text-amber-200'
             )}
           >
             {t.type === 'success' && <CheckCircle2 className="h-5 w-5 text-emerald-400 shrink-0 mt-0.5" />}
             {t.type === 'error' && <AlertCircle className="h-5 w-5 text-rose-400 shrink-0 mt-0.5" />}
-            {t.type === 'info' && <Info className="h-5 w-5 text-brand-400 shrink-0 mt-0.5" />}
+            {t.type === 'info' && <Info className="h-5 w-5 text-[#ffa116] shrink-0 mt-0.5" />}
             <div className="flex-1 min-w-0">
-              <h5 className="text-sm font-medium text-slate-100">{t.title}</h5>
-              {t.message && <p className="text-xs text-muted-foreground mt-0.5">{t.message}</p>}
+              <h5 className="text-sm font-bold text-[#ffffff]">{t.title}</h5>
+              {t.message && <p className="text-xs text-[#d1d5db] mt-0.5">{t.message}</p>}
             </div>
             <button
               onClick={() => removeToast(t.id)}
-              className="rounded p-1 text-muted-foreground hover:text-slate-100 transition-colors"
+              className="rounded p-1 text-[#9ca3af] hover:text-[#ffffff] transition-colors"
             >
               <X className="h-4 w-4" />
             </button>

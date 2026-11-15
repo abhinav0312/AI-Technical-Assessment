@@ -4,12 +4,13 @@ from datetime import datetime
 
 
 class RunSampleRequest(BaseModel):
-    language: str = Field(..., pattern="^(python|typescript|javascript)$")
+    language: str = Field(..., pattern="^(python|typescript|javascript|c|cpp|c\\+\\+|java)$")
     source_code: str = Field(..., min_length=1)
+    custom_input: Optional[str] = None
 
 
 class SubmissionCreate(BaseModel):
-    language: str = Field(..., pattern="^(python|typescript|javascript)$")
+    language: str = Field(..., pattern="^(python|typescript|javascript|c|cpp|c\\+\\+|java)$")
     source_code: str = Field(..., min_length=1)
 
 

@@ -10,13 +10,26 @@ export class ApiError extends Error {
   }
 }
 
-let inMemoryToken: string | null = null;
+const AUTH_TOKEN_KEY = 'devmind_auth_token';
+
+let inMemoryToken: string | null =
+  typeof window !== 'undefined' ? localStorage.getItem(AUTH_TOKEN_KEY) : null;
 
 export function setAuthToken(token: string | null) {
   inMemoryToken = token;
+  if (typeof window !== 'undefined') {
+    if (token) {
+      localStorage.setItem(AUTH_TOKEN_KEY, token);
+    } else {
+      localStorage.removeItem(AUTH_TOKEN_KEY);
+    }
+  }
 }
 
 export function getAuthToken(): string | null {
+  if (!inMemoryToken && typeof window !== 'undefined') {
+    inMemoryToken = localStorage.getItem(AUTH_TOKEN_KEY);
+  }
   return inMemoryToken;
 }
 

@@ -40,6 +40,9 @@ from app.models.devsim import (
     DevSimAttempt,
     DevSimReport,
 )
+from app.models.verification import EmailVerification
+from app.models.interview import InterviewSession, InterviewTurn
+from app.models.contest import Contest, ContestParticipant, contest_challenge_association
 
 __all__ = [
     "Base",
@@ -76,4 +79,10 @@ __all__ = [
     "DevSimScenario",
     "DevSimAttempt",
     "DevSimReport",
+    "EmailVerification",
+    "InterviewSession",
+    "InterviewTurn",
+    "Contest",
+    "ContestParticipant",
+    "contest_challenge_association",
 ]

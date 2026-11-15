@@ -62,14 +62,14 @@ export default {
           foreground: 'hsl(var(--card-foreground))',
         },
         surface: {
-          light: '#ffffff',
-          subtle: '#f8fafc',
-          muted: '#f1f5f9',
-          card: '#ffffff',
-          border: '#e2e8f0',
-          darkest: '#090b10',
-          darker: '#0d1117',
-          dark: '#161b22',
+          light: '#262626',
+          subtle: '#1e1e1e',
+          muted: '#1e1e1e',
+          card: '#262626',
+          border: '#383838',
+          darkest: '#141414',
+          darker: '#1a1a1a',
+          dark: '#1e1e1e',
         }
       },
       borderRadius: {

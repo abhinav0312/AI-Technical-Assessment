@@ -21,7 +21,7 @@ router = APIRouter()
 
 class SubmissionPayload(BaseModel):
     challenge_id: str
-    language: str = Field(..., pattern="^(python|typescript|javascript)$")
+    language: str = Field(..., pattern="^(python|typescript|javascript|c|cpp|c\\+\\+|java)$")
     source_code: str = Field(..., min_length=1)
 
 

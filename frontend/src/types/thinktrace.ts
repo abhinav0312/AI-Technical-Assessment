@@ -72,10 +72,13 @@ export interface ThinkTraceReport {
   prompt_version: string;
   ai_provider: string;
   ai_model: string;
+  tier?: 'flash_lite' | 'flash_pro';
   is_fallback: boolean;
   confidence_score: number;
   confidence_level: 'high' | 'medium' | 'low';
   token_usage: Record<string, any>;
+  diagnostic_metrics?: Record<string, any>;
+  latency_ms?: number;
 
   // Human Review & Correction
   human_reviewed: boolean;

@@ -3,38 +3,40 @@ from app.services.thinktrace.schemas import (
     ThinkTraceEvalInput,
     ThinkTraceServiceResult,
 )
-from app.services.thinktrace.providers.heuristic_fallback import HeuristicFallbackProvider
-from app.services.thinktrace.providers.llm_provider import LLMProvider
+from app.services.thinktrace.engines.flash_lite import FlashLiteEngine
+from app.services.thinktrace.engines.flash_pro import FlashProEngine
 from app.core.logging import logger
 
 
 class ThinkTraceService:
     """
-    Unified ThinkTrace AI Evaluation Service.
-    Manages provider selection, timeout handling, and deterministic fallback.
+    Dual-Tier ThinkTrace AI Intelligence Engine (Gemini Flash Architecture).
+    - Tier 1 (Flash Lite): Sub-second AST & Static Structural Intelligence.
+    - Tier 2 (Flash Pro): Deep Cognitive Multi-Pillar Semantic Reasoning & Formal Invariant Proofs.
     """
 
     def __init__(self):
-        self.fallback_provider = HeuristicFallbackProvider()
-        self.llm_provider = LLMProvider()
+        self.flash_lite_engine = FlashLiteEngine()
+        self.flash_pro_engine = FlashProEngine()
 
-    async def evaluate_reasoning(self, inp: ThinkTraceEvalInput) -> ThinkTraceServiceResult:
-        # Check if live LLM provider is configured with an active API key
-        if self.llm_provider.is_available():
-            try:
-                logger.info("Evaluating reasoning via configured live AI Provider...")
-                result = await self.llm_provider.evaluate(inp)
-                return result
-            except Exception as e:
-                logger.warning(
-                    f"Live AI provider evaluation failed or timed out ({e}). Engaging development heuristic fallback.",
-                    exc_info=True,
-                )
+    @property
+    def llm_provider(self):
+        return self.flash_pro_engine.llm_provider
 
-        # Fallback evaluation with transparent labeling
-        logger.info("Executing ThinkTrace evaluation via development heuristic engine.")
-        fallback_result = await self.fallback_provider.evaluate(inp)
-        return fallback_result
+    async def evaluate_reasoning(
+        self,
+        inp: ThinkTraceEvalInput,
+        tier: Optional[str] = None
+    ) -> ThinkTraceServiceResult:
+        selected_tier = (tier or inp.tier or "flash_pro").lower()
+
+        if selected_tier == "flash_lite":
+            logger.info("Executing ThinkTrace Tier 1 (Flash Lite: Sub-second AST / Static Analysis)...")
+            return await self.flash_lite_engine.evaluate(inp)
+
+        # Default to Flash Pro (Deep Cognitive Intelligence)
+        logger.info("Executing ThinkTrace Tier 2 (Flash Pro: Deep Cognitive Intelligence)...")
+        return await self.flash_pro_engine.evaluate(inp)
 
 
 # Singleton instance

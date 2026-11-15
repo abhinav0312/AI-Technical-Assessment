@@ -9,17 +9,15 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
   const [theme, setTheme] = useState<Theme>(() => {
     try {
       const saved = typeof window !== 'undefined' ? localStorage.getItem('devmind-theme') : null;
-      if (saved === 'light' || saved === 'dark') return saved;
-      if (typeof window !== 'undefined' && typeof window.matchMedia === 'function') {
-        return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
-      }
+      if (saved === 'dark' || saved === 'light') return saved;
     } catch {
       // fallback
     }
-    return 'dark';
+    return 'dark'; // Always default to Dark Mode
   });
 
   useEffect(() => {
+    document.documentElement.classList.add('dark');
     document.documentElement.classList.toggle('dark', theme === 'dark');
     document.documentElement.style.colorScheme = theme;
   }, [theme]);

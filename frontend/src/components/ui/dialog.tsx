@@ -59,28 +59,28 @@ export function Dialog({
         aria-modal="true"
         aria-labelledby="dialog-title"
         className={cn(
-          'relative w-full rounded-xl border border-border/80 bg-surface-card/95 p-6 shadow-2xl backdrop-blur-md z-10 animate-in zoom-in-95 duration-200 text-foreground',
+          'relative w-full rounded-2xl border border-[#383838] bg-[#262626] p-6 shadow-2xl backdrop-blur-md z-10 animate-in zoom-in-95 duration-200 text-[#eff2f6]',
           maxWidthClasses[maxWidth]
         )}
       >
-        <div className="flex items-center justify-between pb-4 border-b border-border/40">
+        <div className="flex items-center justify-between pb-4 border-b border-[#383838]">
           <div>
-            <h2 id="dialog-title" className="text-lg font-semibold text-slate-100">
+            <h2 id="dialog-title" className="text-lg font-bold text-[#ffffff]">
               {title}
             </h2>
             {description && (
-              <p className="text-sm text-muted-foreground mt-1">{description}</p>
+              <p className="text-xs text-[#9ca3af] mt-1 leading-relaxed">{description}</p>
             )}
           </div>
           <button
             onClick={onClose}
             aria-label="Close dialog"
-            className="rounded-lg p-1.5 text-muted-foreground hover:bg-surface-dark hover:text-foreground transition-colors"
+            className="rounded-lg p-1.5 text-[#9ca3af] hover:bg-[#333333] hover:text-[#ffffff] transition-colors"
           >
             <X className="h-5 w-5" />
           </button>
         </div>
-        <div className="mt-4">{children}</div>
+        <div className="mt-4 text-xs text-[#d1d5db]">{children}</div>
       </div>
     </div>
   );
